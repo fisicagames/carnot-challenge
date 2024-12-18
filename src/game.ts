@@ -7,8 +7,7 @@ export class Game {
     private canvas: HTMLCanvasElement;
     private engine: Engine;
     //TODO: Config Havok physics use for each games:
-    private static useHavok: boolean = true;s
-    //TODO: Config use Inspector Debug Model feature:
+    private static useHavok: boolean = true;
     private static useInspectorDebugModel: boolean;
 
     static { // Bloco estático
@@ -17,8 +16,6 @@ export class Game {
         if (inspectorEnabledString === 'true') {
             Game.useInspectorDebugModel = true;
             console.log("Inspector habilitado pela variável de ambiente.");
-        } else if (inspectorEnabledString === 'false'){
-            Game.useInspectorDebugModel = false;
         } else {
             Game.useInspectorDebugModel = false;
         }
@@ -27,14 +24,20 @@ export class Game {
     constructor() {
         this.canvas = CanvasInitializer.createAndAdjustCanvas();
         this.engine = EngineInitializer.createEngine(this.canvas);
-
     }
+
     public async startMainScene() {
         const mainScene = new SceneInitializer(this.canvas, this.engine, Game.useHavok);
+
+        // Carregar e habilitar o modelo do inspector de forma condicional
         if (Game.useInspectorDebugModel) {
-            const { InspectorDebugModel } = await import("./Core/InspectorDebugModel");
-            // Enable inspector mode with: Shift+d, c or j.
-            InspectorDebugModel.enable(mainScene.scene); 
+            import('./Core/InspectorDebugModel').then((module) => {
+                const InspectorDebugModel = module.InspectorDebugModel;
+                // Habilita o modo de inspector com: Shift+d, c ou j
+                InspectorDebugModel.enable(mainScene.scene); 
+            }).catch((error) => {
+                console.error("Erro ao carregar o InspectorDebugModel:", error);
+            });
         }
     }
 }

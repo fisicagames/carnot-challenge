@@ -47,12 +47,17 @@ export class InspectorDebugModel {
     }
 
     private static toggleJoystick(): void {
-        const joystickZIndex = VirtualJoystick.Canvas.style.zIndex;
+    const canvas = VirtualJoystick.Canvas; // Referência local para facilitar a leitura
+    if (canvas) { // Verifica se o Canvas não é null
+        const joystickZIndex = canvas.style.zIndex;
         if (joystickZIndex === "4") {
-            VirtualJoystick.Canvas.style.zIndex = "-1";
+            canvas.style.zIndex = "-1";
         } else {
-            VirtualJoystick.Canvas.style.zIndex = "4";
+            canvas.style.zIndex = "4";
         }
+    } else {
+        console.warn("VirtualJoystick.Canvas is null. Joystick visibility toggle failed.");
+    }
     }
 
     public static disable(): void {
