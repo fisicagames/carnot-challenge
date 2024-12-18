@@ -1,4 +1,4 @@
-//With HavokPhysicsEngine
+//TODO: Implement a conditionally import for HavokPlugin.
 import "@babylonjs/loaders/glTF";
 import { Engine, Scene, Vector3, HemisphericLight, ScenePerformancePriority, Color4, HavokPlugin } from "@babylonjs/core";
 import { CameraInitializer } from "./CameraInitializer";
