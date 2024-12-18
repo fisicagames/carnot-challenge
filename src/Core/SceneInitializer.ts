@@ -6,6 +6,7 @@ import { optimizeMaterials } from "./MaterialOptimizer";
 import { GUILoader } from "./GUILoader";
 import { HavokPhysicsEngine } from "./physics/HavokPhysicsEngine";
 import { MVC } from "../MVC/MVC";
+//TODO: Create a env variable for enable ModelsLoader;
 import { ModelsLoader } from "./ModelsLoader";
 
 export class SceneInitializer {
@@ -28,7 +29,7 @@ export class SceneInitializer {
 
     private async initialize(): Promise<void> {
         const advancedTexture = await GUILoader.loadGUI(this._scene, "./assets/gui/guiTexture.json");
-        //await ModelsLoader.loadModels(this._scene, "./assets/models/", "coilBake.gltf", true, true);
+        await ModelsLoader.loadModels(this._scene, "./assets/models/", "carnot.gltf", true, true);
         this.sceneOptimizer();
         this._scene.clearColor = Color4.FromHexString("#87CEEB");
         const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(-0.2, 0.11, 0), this._scene);
