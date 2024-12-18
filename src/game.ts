@@ -7,22 +7,26 @@ import { SceneInitializer } from "./Core/SceneInitializer";
 export class Game {
     private canvas: HTMLCanvasElement;
     private engine: Engine;
+    //TODO: Config Havok physics use for each games:
     private useHavok: boolean = true;
+    //TODO: Config use Inspector Debug Model feature:
+    private useInspectorDebugModel: boolean = false;
 
     constructor() {
         this.canvas = CanvasInitializer.createAndAdjustCanvas();
         this.engine = EngineInitializer.createEngine(this.canvas);
 
     }
-    public startMainScene() {
-        //TODO: Config Havok physics use for each games:
+    public async startMainScene() {
         const mainScene = new SceneInitializer(this.canvas, this.engine, this.useHavok);
-        //TODO: Remove InspectorDebugModel before build!
-        //InspectorDebugModel.enable(mainScene.scene); //Shift+d
+        if (this.useInspectorDebugModel) {
+            // Importação dinâmica do módulo InspectorDebugModel
+            const { InspectorDebugModel } = await import("./Core/InspectorDebugModel");
+            InspectorDebugModel.enable(mainScene.scene); // Enable inspector mode with: Shift+d, c or j.
+        }
     }
 }
 
-// Export a function to instantiate the Game class
 export function startGame(): void {
     const game = new Game();
     game.startMainScene();

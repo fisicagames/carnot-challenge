@@ -14,7 +14,6 @@ export class Model implements IModel {
 
     constructor(scene: Scene, physicsPlugin?: HavokPlugin | null) {
         this.scene = scene;
-        //TODO: Remove Havok for this game.
         this.physicsPlugin = physicsPlugin || null;
 
 
