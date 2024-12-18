@@ -41,7 +41,7 @@ export class LanguageSwitcher {
 
                 if (control instanceof TextBlock) {
                     control.text = translations[this.languageOption];
-                } else if (control instanceof Button) {
+                } else if (control instanceof Button && control.textBlock) {
                     control.textBlock.text = translations[this.languageOption];
                 }
             }
