@@ -2,6 +2,7 @@ import { Scene, Vector3, Mesh, FollowCamera, KeyboardEventTypes } from "@babylon
 import { IModel } from "../Model/IModel";
 import { IView } from "../View/IView";
 import { CameraController } from "./CameraController";
+import { InputKeyboardController } from "./InputKeyboardController";
 
 export class Controller {
     private scene: Scene;
@@ -9,6 +10,8 @@ export class Controller {
     private view: IView;
     private followCamera: FollowCamera;
     private followCameraTarget: Mesh | null = null;
+    private inputKeyboardControllers: InputKeyboardController;
+
 
     private isUpPressed: boolean = false;
     private isDownPressed: boolean = false;
@@ -19,8 +22,7 @@ export class Controller {
         this.scene = scene;
         this.model = model;
         this.view = view;
-        this.setupControls();
-
+        
         this.followCamera = this.scene.activeCamera as FollowCamera;
 
         this.model.setScoreUpdateCallback((newScore) => {
@@ -29,28 +31,32 @@ export class Controller {
 
         this.model.setEndGameCallback((isVisible: boolean) => this.showEndGamePanel(isVisible));
 
-        this.keyboardInput();
+        this.inputKeyboardControllers = new InputKeyboardController(scene);
+        this.inputKeyboardControllerSetup();
+        this.inputTouchControllerSetup();
+
+        
         this.update();
 
+    }  
+    
+    private inputKeyboardControllerSetup(){
+        this.inputKeyboardControllers.bindKeyboardEvents({
+            "w": (eventType) => { this.handleKeyPress(eventType, "w"); },
+            "arrowup": (eventType) => { this.handleKeyPress(eventType, "arrowup"); },
+        });
     }
 
-    private keyboardInput() {
-        let forceAccumulator = new Vector3(0, 0, 0);
-
-        this.scene.onKeyboardObservable.add((kbInfo) => {
-            switch (kbInfo.type) {
-                case KeyboardEventTypes.KEYUP:
-                    if (kbInfo.event.key === "w" ||
-                        kbInfo.event.key === "W" ||
-                        kbInfo.event.key === "ArrowUp" ||
-                        kbInfo.event.key === " ") {
-                    }
-                    if (kbInfo.event.key === "q"){
-
-                    }
-                    break;
+    private handleKeyPress(eventType: KeyboardEventTypes, key: string) {
+        if (eventType === KeyboardEventTypes.KEYDOWN) {
+            if (key === "w" || key === "arrowup") {
+                console.log(`Key ${key} pressed down`);
             }
-        });
+        } else if (eventType === KeyboardEventTypes.KEYUP) {
+            if (key === "w" || key === "arrowup") {
+                console.log(`Key ${key} released`);
+            }
+        }
     }
 
     private update() {
@@ -58,7 +64,7 @@ export class Controller {
             this.updateCameraPosition();            
         });
     }
-    private setupControls() {
+    private inputTouchControllerSetup() {
 
         this.view.onButtonMenuStartA(() => this.startGameAngular());
         this.view.onButtonMenuStartB(() => this.startGameLinear());
