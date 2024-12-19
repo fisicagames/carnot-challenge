@@ -1,4 +1,4 @@
-import { Scene, HavokPlugin} from "@babylonjs/core";
+import { Scene, HavokPlugin, MeshBuilder, Vector3, Mesh} from "@babylonjs/core";
 import { IModel } from "./IModel";
 import { SoundModel } from "./SoundModel";
 
@@ -10,6 +10,7 @@ export class Model implements IModel {
     private endGameCallback: ((isVisible: boolean) => void) | null = null;
     public endGAme: boolean = false;
     public modeEffectIntense: boolean = true;
+    private mesh: Mesh;
 
 
     constructor(scene: Scene, physicsPlugin?: HavokPlugin | null) {
@@ -29,6 +30,11 @@ export class Model implements IModel {
         this.allSounds.push(this.backgroundMusic);
 
         this.updateSceneModels();
+
+        //gas particle
+        this.mesh = MeshBuilder.CreateSphere("sphere", { diameter: 0.8, segments: 16 }, scene);
+        this.mesh.position = new Vector3(0, 0, 0);
+        
     }
 
     private updateSceneModels() {
