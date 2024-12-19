@@ -28,6 +28,7 @@ export class SceneInitializer {
     }
 
     private async initialize(): Promise<void> {
+        //TODO: [ ]: Update GUI content.        
         const advancedTexture = await GUILoader.loadGUI(this._scene, "./assets/gui/guiTexture.json");
         await ModelsLoader.loadModels(this._scene, "./assets/models/", "carnot.gltf", true, true);
         this.sceneOptimizer();

@@ -9,8 +9,8 @@ export class LanguageSwitcher {
         this.strings = {
             ButtonLang: ["ENGLISH", "PORTUGUÊS"],
             TextblockMeta: ["Objetivo: movimente o ímã para alterar o fluxo magnético e induzir corrente elétrica na bobina, iluminando a lâmpada com a máxima intensidade que conseguir!", "Goal: Move the magnet to alter the magnetic flux and induce an electric current in the coil, lighting the bulb as brightly as possible!"],
-            TextblockTitle: ["Faraday Game", "Faraday Game"], 
-            ButtonMenuStartA: ["Movimento Angular", "Angular Motion"],
+            TextblockTitle: ["Carnot Game", "Carnot Game"], 
+            ButtonMenuStartA: ["Iniciar", "Start"],
             ButtonMenuStartB: ["Movimento Linear", "Linear Motion"],
             ButtonMenuStartC: ["None", "None"],
             TextblockMenuScore: ["Maior pontuação:", "High Score:"],
