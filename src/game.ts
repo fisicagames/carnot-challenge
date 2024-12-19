@@ -6,7 +6,7 @@ import { SceneInitializer } from "./Core/SceneInitializer";
 export class Game {
     private canvas: HTMLCanvasElement;
     private engine: Engine;
-    //TODO: Config Havok physics use for each games:
+    //TODO: [X] Config Havok physics use for each games:
     private static useHavok: boolean = true;
     private static useInspectorDebugModel: boolean;
 
