@@ -103,13 +103,11 @@ export class View implements IView {
 
     public onButtonEfeitoSuave(callback: () => void) {
         this.buttonEfeitoSuave.onPointerUpObservable.add(() => {
-            this.rectangleAviso.isVisible = false;
             callback();
         });
     };
     public onButtonEfeitoIntenso(callback: () => void) {
         this.buttonEfeitoIntenso.onPointerUpObservable.add(() => {
-            this.rectangleAviso.isVisible = false;
             callback();
         });
     };
@@ -117,20 +115,12 @@ export class View implements IView {
 
     public onButtonMenuStartA(callback: () => void): void {
         this.buttonMenuStartA.onPointerUpObservable.add(() => {
-            if (this.firstTime) {
-                this.rectangleAviso.isVisible = true;
-                this.firstTime = false;
-            }
             callback();
         });
     }
 
     public onButtonMenuStartB(callback: () => void): void {
         this.buttonMenuStartB.onPointerUpObservable.add(() => {
-            if (this.firstTime) {
-                this.rectangleAviso.isVisible = true;
-                this.firstTime = false;
-            }
             callback();
         });
     }
