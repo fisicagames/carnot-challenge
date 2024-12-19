@@ -16,13 +16,13 @@ export class Model implements IModel {
         this.scene = scene;
         this.physicsPlugin = physicsPlugin || null;
 
-
-        //https://pixabay.com/pt/music/otimista-legendary-paganini-caprice-house-background-music-for-video-full-ver-271219/
-        //Music by Maksym Dudchyk from Pixabay
+        //TODO: [X]: Setup the music soundtrack:
+        //https://pixabay.com/pt/music/techno-e-trance-timelapse-164084/
+        //Music by Dimitrios Gkorilas from Pixabay
         this.backgroundMusic = new SoundModel(
             this.scene,
             "backgroundSound",
-            "./assets/sounds/overdrive-play-271522_compress.mp3",
+            "./assets/sounds/timelapse-164084-compress.mp3",
             true
         );
         this.backgroundMusic.setVolume(0.7);
