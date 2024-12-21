@@ -30,7 +30,7 @@ export class SceneInitializer {
     private async initialize(): Promise<void> {
         //TODO: [ ]: Update GUI content.        
         const advancedTexture = await GUILoader.loadGUI(this._scene, "./assets/gui/guiTexture.json");
-        await ModelsLoader.loadModels(this._scene, "./assets/models/", "carnot.gltf", true, true);
+        await ModelsLoader.loadModels(this._scene, "./assets/models/", "carnotBox.gltf", true, true);
         this.sceneOptimizer();
         this._scene.clearColor = Color4.FromHexString("#87CEEB");
         const light1: HemisphericLight = new HemisphericLight("light1", new Vector3(-0.2, 0.11, 0), this._scene);
@@ -47,7 +47,7 @@ export class SceneInitializer {
         }
 
         const mvc = new MVC(this._scene, advancedTexture, physicsPlugin);
-
+        
         await this._scene.whenReadyAsync(); //optional
         this._engine.hideLoadingUI(); //optional
         this.sceneLoop();
@@ -63,5 +63,6 @@ export class SceneInitializer {
         this._scene.skipPointerMovePicking = true;
         //this._scene.freezeActiveMeshes();
         this._scene.performancePriority = ScenePerformancePriority.BackwardCompatible;
+       
     }
 }
