@@ -9,7 +9,7 @@ export class HavokPhysicsEngine   {
 
         const hk = new HavokPlugin(true, havok);
         //TODO: [X] Set gravity for the game.
-        scene.enablePhysics(new Vector3(0, -9.8, 0), hk); //gravity
+        scene.enablePhysics(new Vector3(0, 0, 0), hk); //gravity
 
         return hk;
     }
