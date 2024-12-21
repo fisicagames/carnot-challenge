@@ -26,7 +26,7 @@ export class Model implements IModel {
             "./assets/sounds/timelapse-164084-compress.mp3",
             true
         );
-        this.backgroundMusic.setVolume(0.7);
+        this.backgroundMusic.setVolume(1.0);
         this.allSounds.push(this.backgroundMusic);
 
         //cylinder
@@ -36,11 +36,11 @@ export class Model implements IModel {
             shape.material = material;
             return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
         };
-        const cylinderMaterial = { friction: 2.0, restitution: 0.5 }; // Ajuste os valores conforme necessário
+        const cylinderMaterial = { friction: 0.0, restitution: 1.2 }; // Ajuste os valores conforme necessário
         const cylinder_aggregate0 = createCylinderPhysics("Cylinder_primitive0", cylinderMaterial);
         const cylinder_aggregate1 = createCylinderPhysics("Cylinder_primitive1", cylinderMaterial);
         const cylinder_aggregate2 = createCylinderPhysics("Cylinder_primitive2", cylinderMaterial);
-        const cylinder_001_agregate = createCylinderPhysics("Cylinder.001", cylinderMaterial);
+        //const cylinder_001_agregate = createCylinderPhysics("Cylinder.001", cylinderMaterial);
 
 
 
@@ -52,7 +52,7 @@ export class Model implements IModel {
             new Vector3(1, 1, 1),        // dimensions of the box
             scene                                // scene of the shape
         );
-        const particlePhysicsMaterial = { friction: 1.0,
+        const particlePhysicsMaterial = { friction: 0.0,
                                           restitution: 1.0,                                          
                                         };
         shapeParticle.material = particlePhysicsMaterial;
@@ -60,7 +60,7 @@ export class Model implements IModel {
         const particleMaterial = new StandardMaterial("Particle",this.scene);
         particleMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
 
-        for (let i = 0; i < 150; i++) {
+        for (let i = 0; i < 500; i++) {
             const particle = MeshBuilder.CreateSphere(`particle_${i}`, { diameter: 0.4, segments: 16 }, this.scene);
             particle.material = particleMaterial;
             particle.position = new Vector3(Math.random() * 10-5, Math.random() * 13, Math.random() * 10 -5);
@@ -70,8 +70,6 @@ export class Model implements IModel {
                 { mass: 1, radius: 0.4 }, // Ajuste o raio de acordo
                 this.scene
             );
-            particle.physicsBody?.setAngularDamping(1.0);
-
             this.particles.push(particle);
         }
 
@@ -82,19 +80,12 @@ export class Model implements IModel {
 
     private updateSceneModels() {
         this.scene.onBeforeRenderObservable.add(() => {
-            const desiredSpeed = 20;
+            const desiredSpeed = 5;
 
             this.particles.forEach((particle) => {
-
-                const angularVelocity = particle.physicsBody?.getAngularVelocity();
-                if (angularVelocity) {
-                    // Zerando a velocidade angular para impedir a rotação
-                    particle.physicsBody?.setAngularVelocity(Vector3.Zero());
-                }
-                
                 const velocity = particle.physicsBody?.getLinearVelocity();
-                //particle.physicsBody?.applyForce(new Vector3(0, 20.8, 0), particle.position);
-                if (velocity) {
+            
+               if(velocity) {
                     const speed = velocity.length();
                     if (Math.abs(speed - desiredSpeed) > 0.1) {
                         const correctionFactor = desiredSpeed / speed;
@@ -103,14 +94,7 @@ export class Model implements IModel {
                     }
                 }
             });
-            this.particles.forEach((particle) => {
-                const randomForce = new Vector3(
-                    (Math.random() - 0.5) * 1,
-                    (Math.random() - 0.5) * 1,
-                    (Math.random() - 0.5) * 1
-                );
-                particle.physicsBody?.applyImpulse(randomForce, particle.getAbsolutePosition());
-            });
+            
         });
     }
 
