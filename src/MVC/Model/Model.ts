@@ -45,28 +45,29 @@ export class Model implements IModel {
 
 
         //gas particle
-        const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.5, scene);
+        //const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.5, scene);
         const shapeBox = new PhysicsShapeBox(
             new Vector3(0, 0, 0),        // center of the box
             new Quaternion(0, 0, 0, 1),  // rotation of the box
             new Vector3(1, 1, 1),        // dimensions of the box
             scene                                // scene of the shape
         );
-        const particlePhysicsMaterial = { friction: 0.0,
-                                          restitution: 1.0,                                          
-                                        };
-        shapeParticle.material = particlePhysicsMaterial;
+        //const particlePhysicsMaterial = { friction: 0.0,
+        //                                  restitution: 1.0,                                          
+        //                                };
+        //shapeParticle.material = particlePhysicsMaterial;
+        //shapeBox.material = particlePhysicsMaterial;
 
         const particleMaterial = new StandardMaterial("Particle",this.scene);
         particleMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
 
-        for (let i = 0; i < 500; i++) {
-            const particle = MeshBuilder.CreateSphere(`particle_${i}`, { diameter: 0.4, segments: 16 }, this.scene);
+        for (let i = 0; i < 100; i++) {
+            const particle = MeshBuilder.CreateSphere(`particle_${i}`, { diameter: 0.8, segments: 16 }, this.scene);
             particle.material = particleMaterial;
             particle.position = new Vector3(Math.random() * 10-5, Math.random() * 13, Math.random() * 10 -5);
             const particlePhysics = new PhysicsAggregate(
                 particle,
-                shapeParticle, // Forma física de esfera
+                shapeBox, // Forma física de esfera shapeBox ou shapeParticle
                 { mass: 1, radius: 0.4 }, // Ajuste o raio de acordo
                 this.scene
             );
