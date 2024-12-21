@@ -1,4 +1,4 @@
-import { Scene, HavokPlugin, MeshBuilder, Vector3, Mesh, PhysicsAggregate, PhysicsShapeType, TransformNode, PhysicsShapeMesh, PhysicsShapeSphere, PhysicsShapeBox, Quaternion, StandardMaterial, Color3 } from "@babylonjs/core";
+import { Scene, HavokPlugin, MeshBuilder, Vector3, Mesh, PhysicsAggregate, PhysicsShapeType, TransformNode, PhysicsShapeMesh, PhysicsShapeSphere, PhysicsShapeBox, Quaternion, StandardMaterial, Color3, PhysicsMotionType } from "@babylonjs/core";
 import { IModel } from "./IModel";
 import { SoundModel } from "./SoundModel";
 
@@ -10,7 +10,10 @@ export class Model implements IModel {
     private endGameCallback: ((isVisible: boolean) => void) | null = null;
     public endGAme: boolean = false;
     public modeEffectIntense: boolean = true;
-    private particles: Mesh[] = [];;
+    private particles: Mesh[] = [];
+    private particlesNode: TransformNode;
+    private piston_aggregate2: PhysicsAggregate;
+
 
 
     constructor(scene: Scene, physicsPlugin?: HavokPlugin | null) {
@@ -37,38 +40,48 @@ export class Model implements IModel {
             return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
         };
         const cylinderMaterial = { friction: 0.0, restitution: 1.2 }; // Ajuste os valores conforme necessário
+        
         const cylinder_aggregate0 = createCylinderPhysics("Cylinder_primitive0", cylinderMaterial);
+        cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
         const cylinder_aggregate1 = createCylinderPhysics("Cylinder_primitive1", cylinderMaterial);
-        const cylinder_aggregate2 = createCylinderPhysics("Cylinder_primitive2", cylinderMaterial);
+        cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
+        this.piston_aggregate2 = createCylinderPhysics("Cylinder_primitive2", cylinderMaterial);
+        this.piston_aggregate2.body.setMotionType(PhysicsMotionType.ANIMATED);
+        //Initial velocity:
+        this.piston_aggregate2.body.setLinearVelocity(new Vector3(0, -4, 0));
+
+        
+
+
         //const cylinder_001_agregate = createCylinderPhysics("Cylinder.001", cylinderMaterial);
 
-
-
         //gas particle
-        //const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.5, scene);
+        const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.5, scene);
         const shapeBox = new PhysicsShapeBox(
             new Vector3(0, 0, 0),        // center of the box
             new Quaternion(0, 0, 0, 1),  // rotation of the box
             new Vector3(1, 1, 1),        // dimensions of the box
             scene                                // scene of the shape
         );
-        //const particlePhysicsMaterial = { friction: 0.0,
-        //                                  restitution: 1.0,                                          
-        //                                };
-        //shapeParticle.material = particlePhysicsMaterial;
+        const particlePhysicsMaterial = { friction: 0.0,
+                                          restitution: 1.0,                                          
+                                        };
+        shapeParticle.material = particlePhysicsMaterial;
         //shapeBox.material = particlePhysicsMaterial;
 
         const particleMaterial = new StandardMaterial("Particle",this.scene);
         particleMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
 
-        for (let i = 0; i < 100; i++) {
+        this.particlesNode = new TransformNode("ParticleNode", this.scene);
+        for (let i = 0; i < 200; i++) {
             const particle = MeshBuilder.CreateSphere(`particle_${i}`, { diameter: 0.8, segments: 16 }, this.scene);
+            particle.parent = this.particlesNode;
             particle.material = particleMaterial;
             particle.position = new Vector3(Math.random() * 10-5, Math.random() * 13, Math.random() * 10 -5);
             const particlePhysics = new PhysicsAggregate(
                 particle,
-                shapeBox, // Forma física de esfera shapeBox ou shapeParticle
-                { mass: 1, radius: 0.4 }, // Ajuste o raio de acordo
+                shapeParticle, // Forma física de esfera shapeBox ou shapeParticle
+                { mass: 1, radius: 0.8 }, // Ajuste o raio de acordo
                 this.scene
             );
             this.particles.push(particle);
@@ -81,7 +94,19 @@ export class Model implements IModel {
 
     private updateSceneModels() {
         this.scene.onBeforeRenderObservable.add(() => {
-            const desiredSpeed = 5;
+            //piston move:
+            if(this.piston_aggregate2.body.transformNode.position.y < -1.8){
+                this.piston_aggregate2.body.setLinearVelocity(new Vector3(0, 4, 0));
+            }
+            else if (this.piston_aggregate2.body.transformNode.position.y > 0.5){
+                this.piston_aggregate2.body.setLinearVelocity(new Vector3(0, -4, 0));
+            }
+                
+            
+            
+
+            //particles move:
+            const desiredSpeed = 20;
 
             this.particles.forEach((particle) => {
                 const velocity = particle.physicsBody?.getLinearVelocity();
