@@ -3,3 +3,10 @@
 https://gui.babylonjs.com/#F8FKK5#1
 
 https://buttonbuddy.dev/
+
+# Optimizing Solid Particle Systems
+
+https://doc.babylonjs.com/features/featuresDeepDive/particles/solid_particle_system/optimize_sps/
+https://playground.babylonjs.com/#2FPT1A#50
+
+# [Creating a Box Physics Body for an External Mesh (Transform Node)](https://forum.babylonjs.com/t/creating-a-box-physics-body-for-an-external-mesh-transform-node/47426)
