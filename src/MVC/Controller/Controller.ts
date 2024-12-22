@@ -66,16 +66,13 @@ export class Controller {
     }
     private inputTouchControllerSetup() {
 
-        this.view.onButtonMenuStartA(() => this.startGameAngular());
+        this.view.onButtonMenuStartA(() => this.startGame());
         this.view.onButtonMenuStartB(() => this.startGameLinear());
-        this.view.onButtonMenuStartC(() => this.startGameAngular());
+        this.view.onButtonMenuStartC(() => this.startGame());
         this.view.onButtonMenuContinuar(() => this.continueGame());
         this.view.onButtonMenu(() => this.showMenu());
         this.view.onToggleMusic(() => this.toggleMusic());
         this.view.onButtonLang(() => this.changeLanguage());
-        this.view.onButtonEfeitoIntenso(() => {this.model.modeEffectIntense = true});
-        this.view.onButtonEfeitoSuave(() => {this.model.modeEffectIntense = false});
-
         //this.view.buttonUpDown(() => { this.isUpPressed = true; });
         //this.view.onButtonUpUp(() => { this.isUpPressed = false; });
         this.view.setButtonUpUpCallback(() => null);
@@ -97,8 +94,9 @@ export class Controller {
         }
     }
 
-    private startGameAngular(): void {
-        this.view.changeButtonUPSymbol(`↻`);
+    private startGame(): void {
+        //TODO: Mudar para view:
+        this.view.changeButtonUPSymbol(`Fonte Quente`);
         this.continueGame();
     }
     private startGameLinear(): void {
