@@ -39,7 +39,7 @@ export class Model implements IModel {
             shape.material = material;
             return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
         };
-        const cylinderMaterial = { friction: 0.0, restitution: 1.2 }; // Ajuste os valores conforme necessário
+        const cylinderMaterial = { friction: 0.0, restitution: 1.0 }; // Ajuste os valores conforme necessário
         
         const cylinder_aggregate0 = createCylinderPhysics("Cylinder_primitive0", cylinderMaterial);
         cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
@@ -56,11 +56,11 @@ export class Model implements IModel {
         //const cylinder_001_agregate = createCylinderPhysics("Cylinder.001", cylinderMaterial);
 
         //gas particle
-        const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.5, scene);
+        const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.2, scene);
         const shapeBox = new PhysicsShapeBox(
             new Vector3(0, 0, 0),        // center of the box
             new Quaternion(0, 0, 0, 1),  // rotation of the box
-            new Vector3(1, 1, 1),        // dimensions of the box
+            new Vector3(0.3, 0.3, 0.3),        // dimensions of the box
             scene                                // scene of the shape
         );
         const particlePhysicsMaterial = { friction: 0.0,
@@ -73,14 +73,14 @@ export class Model implements IModel {
         particleMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
 
         this.particlesNode = new TransformNode("ParticleNode", this.scene);
-        for (let i = 0; i < 200; i++) {
-            const particle = MeshBuilder.CreateSphere(`particle_${i}`, { diameter: 0.8, segments: 16 }, this.scene);
+        for (let i = 0; i < 100; i++) {
+            const particle = MeshBuilder.CreateSphere(`particle_${i}`, { diameter: 0.7, segments: 8 }, this.scene);
             particle.parent = this.particlesNode;
             particle.material = particleMaterial;
             particle.position = new Vector3(Math.random() * 10-5, Math.random() * 13, Math.random() * 10 -5);
             const particlePhysics = new PhysicsAggregate(
                 particle,
-                shapeParticle, // Forma física de esfera shapeBox ou shapeParticle
+                shapeBox, // Forma física de esfera shapeBox ou shapeParticle
                 { mass: 1, radius: 0.8 }, // Ajuste o raio de acordo
                 this.scene
             );
@@ -101,12 +101,13 @@ export class Model implements IModel {
             else if (this.piston_aggregate2.body.transformNode.position.y > 0.5){
                 this.piston_aggregate2.body.setLinearVelocity(new Vector3(0, -4, 0));
             }
+            
                 
             
             
 
             //particles move:
-            const desiredSpeed = 20;
+            const desiredSpeed = 10 * (3-(1.9+this.piston_aggregate2.body.transformNode.position.y));
 
             this.particles.forEach((particle) => {
                 const velocity = particle.physicsBody?.getLinearVelocity();
@@ -118,6 +119,13 @@ export class Model implements IModel {
                         const correctedVelocity = velocity.scale(correctionFactor);
                         particle.physicsBody?.setLinearVelocity(correctedVelocity);
                     }
+                    /*const randomForce = new Vector3(
+                        (Math.random() - 0.5) * 0,
+                        (Math.random() - 0.5) * 3,
+                        (Math.random() - 0.5) * 0
+                    );
+                    particle.physicsBody?.applyImpulse(randomForce, particle.getAbsolutePosition());
+                    */
                 }
             });
             
