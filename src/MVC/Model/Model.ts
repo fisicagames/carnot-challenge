@@ -1,7 +1,7 @@
 import { Scene, HavokPlugin, MeshBuilder, Vector3, Mesh, PhysicsAggregate, PhysicsShapeType, TransformNode, PhysicsShapeMesh, PhysicsShapeSphere, PhysicsShapeBox, Quaternion, StandardMaterial, Color3, PhysicsMotionType } from "@babylonjs/core";
 import { IModel } from "./IModel";
 import { SoundModel } from "./SoundModel";
-
+import { CarnotCylinder } from "./CarnotCylinder";
 export class Model implements IModel {
     private scene: Scene;
     public backgroundMusic: SoundModel;
@@ -9,12 +9,9 @@ export class Model implements IModel {
     private physicsPlugin: HavokPlugin | null;
     private endGameCallback: ((isVisible: boolean) => void) | null = null;
     public endGAme: boolean = false;
-    public modeEffectIntense: boolean = true;
     private particles: Mesh[] = [];
     private particlesNode: TransformNode;
-    private piston_aggregate2: PhysicsAggregate;
-
-
+    private carnotCylinder: CarnotCylinder;
 
     constructor(scene: Scene, physicsPlugin?: HavokPlugin | null) {
         this.scene = scene;
@@ -32,28 +29,7 @@ export class Model implements IModel {
         this.backgroundMusic.setVolume(1.0);
         this.allSounds.push(this.backgroundMusic);
 
-        //cylinder
-        const createCylinderPhysics = (meshName: string, material: object): PhysicsAggregate => {
-            const mesh = this.scene.getMeshByName(meshName) as Mesh;
-            const shape = new PhysicsShapeMesh(mesh, this.scene);
-            shape.material = material;
-            return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
-        };
-        const cylinderMaterial = { friction: 0.0, restitution: 1.0 }; // Ajuste os valores conforme necessário
-        
-        const cylinder_aggregate0 = createCylinderPhysics("Cylinder_primitive0", cylinderMaterial);
-        cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
-        const cylinder_aggregate1 = createCylinderPhysics("Cylinder_primitive1", cylinderMaterial);
-        cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
-        this.piston_aggregate2 = createCylinderPhysics("Cylinder_primitive2", cylinderMaterial);
-        this.piston_aggregate2.body.setMotionType(PhysicsMotionType.ANIMATED);
-        //Initial velocity:
-        this.piston_aggregate2.body.setLinearVelocity(new Vector3(0, -4, 0));
-
-        
-
-
-        //const cylinder_001_agregate = createCylinderPhysics("Cylinder.001", cylinderMaterial);
+        this.carnotCylinder = new CarnotCylinder(this.scene);
 
         //gas particle
         const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.2, scene);
@@ -72,6 +48,7 @@ export class Model implements IModel {
         const particleMaterial = new StandardMaterial("Particle",this.scene);
         particleMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
 
+        //Box limits: x: -5.5 5.5, y: -0.5 16.5, z: -5.5 5.5.
         this.particlesNode = new TransformNode("ParticleNode", this.scene);
         for (let i = 0; i < 100; i++) {
             const particle = MeshBuilder.CreateSphere(`particle_${i}`, { diameter: 0.7, segments: 8 }, this.scene);
@@ -95,11 +72,11 @@ export class Model implements IModel {
     private updateSceneModels() {
         this.scene.onBeforeRenderObservable.add(() => {
             //piston move:
-            if(this.piston_aggregate2.body.transformNode.position.y < -1.8){
-                this.piston_aggregate2.body.setLinearVelocity(new Vector3(0, 4, 0));
+            if(this.carnotCylinder.piston.transformNode.position.y < -1.8){
+                this.carnotCylinder.piston.body.setLinearVelocity(new Vector3(0, 4, 0));
             }
-            else if (this.piston_aggregate2.body.transformNode.position.y > 0.5){
-                this.piston_aggregate2.body.setLinearVelocity(new Vector3(0, -4, 0));
+            else if (this.carnotCylinder.piston.body.transformNode.position.y > 0.5){
+                this.carnotCylinder.piston.body.setLinearVelocity(new Vector3(0, -4, 0));
             }
             
                 
@@ -107,7 +84,7 @@ export class Model implements IModel {
             
 
             //particles move:
-            const desiredSpeed = 10 * (3-(1.9+this.piston_aggregate2.body.transformNode.position.y));
+            const desiredSpeed = 5 * (3-(1.9+this.carnotCylinder.piston.body.transformNode.position.y));
 
             this.particles.forEach((particle) => {
                 const velocity = particle.physicsBody?.getLinearVelocity();
