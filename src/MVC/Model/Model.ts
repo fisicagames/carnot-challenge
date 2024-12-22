@@ -3,6 +3,7 @@ import { IModel } from "./IModel";
 import { SoundModel } from "./SoundModel";
 import { CarnotCylinder } from "./CarnotCylinder";
 import { GasParticles } from "./gasParticles";
+import { SourceBlocks } from "./SourceBlocks";
 export class Model implements IModel {
     private scene: Scene;
     public backgroundMusic?: SoundModel;
@@ -13,6 +14,7 @@ export class Model implements IModel {
 
     private carnotCylinder: CarnotCylinder;
     private gasParticles: GasParticles;
+    private sourceBlocks: SourceBlocks;
 
     constructor(scene: Scene, physicsPlugin?: HavokPlugin | null) {
         this.scene = scene;
@@ -22,6 +24,8 @@ export class Model implements IModel {
 
         this.carnotCylinder = new CarnotCylinder(this.scene);
         this.gasParticles = new GasParticles(this.scene, 100);    
+        this.sourceBlocks = new SourceBlocks(this.scene);
+        
         this.updateSceneModels();
 
     }
