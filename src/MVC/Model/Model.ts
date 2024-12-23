@@ -11,7 +11,7 @@ export class Model implements IModel {
     private physicsPlugin: HavokPlugin | null;
     private endGameCallback: ((isVisible: boolean) => void) | null = null;
     public endGAme: boolean = false;
-
+    
     private carnotCylinder: CarnotCylinder;
     private gasParticles: GasParticles;
     private sourceBlocks: SourceBlocks;
@@ -23,7 +23,7 @@ export class Model implements IModel {
         this.startMusic();
 
         this.carnotCylinder = new CarnotCylinder(this.scene);
-        this.gasParticles = new GasParticles(this.scene, 100);    
+        this.gasParticles = new GasParticles(this.scene, 27);    
         this.sourceBlocks = new SourceBlocks(this.scene);
         
         this.updateSceneModels();
@@ -76,6 +76,10 @@ export class Model implements IModel {
     };
     public setScoreUpdateCallback(callback: (newScore: number) => void): void {
         this.onUpdateScoreCallback = callback;
+    }
+
+    public changeSourceTypes(){
+        this.sourceBlocks.changeSourceTypes();
     }
 
 }
