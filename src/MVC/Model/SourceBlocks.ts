@@ -6,6 +6,7 @@ export class SourceBlocks {
     private sourceTypeIndex: number = 2;
     private sourceType: number = 1;
     private sourceBlockMaterial!: StandardMaterial;
+    private gl: GlowLayer;
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -18,14 +19,13 @@ export class SourceBlocks {
         const sourceBlock = MeshBuilder.CreateBox("HotBlock",
             { width: 20, height: 7, depth: 14 });
         this.sourceBlockMaterial = new StandardMaterial("SourceBlockMaterial", this.scene);
-        this.sourceBlockMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
-        this.sourceBlockMaterial.emissiveColor = new Color3(0.1, 0.1, 0.1);
+        this.sourceBlockMaterial.diffuseColor = Color3.FromHexString("#9F9F9F");
+        this.sourceBlockMaterial.emissiveColor = Color3.FromHexString("#2C2C2C");
         sourceBlock.material = this.sourceBlockMaterial;
 
         sourceBlock.position.y = - 5;
-        const gl = new GlowLayer("glow", this.scene);
-
-        gl.intensity = 1.0;
+        this.gl = new GlowLayer("glow", this.scene);
+        this.gl.intensity = 1.0;
     }
 
     public changeSourceTypes() {
@@ -35,16 +35,19 @@ export class SourceBlocks {
 
         switch (this.sourceType) {
             case 0: //Hot
-                this.sourceBlockMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
+                this.sourceBlockMaterial.diffuseColor = Color3.FromHexString("#8B8B1A");
                 this.sourceBlockMaterial.emissiveColor = new Color3(1.0, 0.0, 0.0);
+                this.gl.intensity = 2.0;
                 break;
             case 1: //Isolating
-                this.sourceBlockMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
-                this.sourceBlockMaterial.emissiveColor = new Color3(0.1, 0.1, 0.1);
+                this.sourceBlockMaterial.diffuseColor = Color3.FromHexString("#9F9F9F");
+                this.sourceBlockMaterial.emissiveColor = Color3.FromHexString("#2C2C2C");
+                this.gl.intensity = 1.0;
                 break;
             case 2: //Cold
-                this.sourceBlockMaterial.diffuseColor = new Color3(0.0, 0.0, 1.0);
-                this.sourceBlockMaterial.emissiveColor = new Color3(0.0, 0.0, 1.0);
+                this.sourceBlockMaterial.diffuseColor = new Color3(1.0, 1.0, 1.0);
+                this.sourceBlockMaterial.emissiveColor = Color3.FromHexString("#00C1FF");
+                this.gl.intensity = 0.5;
                 break;
         }
     }
