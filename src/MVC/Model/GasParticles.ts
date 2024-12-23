@@ -84,20 +84,43 @@ export class GasParticles {
         }
     }
 
-    public updateGasParticleState(pistonY: number){
-        const desiredSpeed = 15 * (3-(1.9+pistonY));
-
-            this.particles.forEach((particle) => {
-                const velocity = particle.physicsBody?.getLinearVelocity();
-                
-               if(velocity) {                    
-                    const speed = velocity.length();
-                    if (Math.abs(speed - desiredSpeed) > 0.1) {
-                        const correctionFactor = desiredSpeed / speed;
-                        const correctedVelocity = velocity.scale(correctionFactor);
-                        particle.physicsBody?.setLinearVelocity(correctedVelocity);
-                    }
+    public updateGasParticleState(pistonY: number) {
+        const desiredSpeed = 15 * (3 - (1.9 + pistonY));
+    
+        const minX = -5.5, maxX = 5.5;
+        const minY = -0.5, maxY = 16.5;
+        const minZ = -5.5, maxZ = 5.5;
+    
+        this.particles = this.particles.filter((particle) => {
+            const position = particle.physicsBody?.transformNode?.position;
+    
+            if (!position) {
+                return true;
+            }
+    
+            const outOfBounds =
+                position.x < minX || position.x > maxX ||
+                position.y < minY || position.y > maxY ||
+                position.z < minZ || position.z > maxZ;
+    
+            if (outOfBounds) {           
+                particle.physicsBody?.dispose();
+                particle.dispose();
+                return false; 
+            }
+    
+            const velocity = particle.physicsBody?.getLinearVelocity();
+            if (velocity) {
+                const speed = velocity.length();
+                if (Math.abs(speed - desiredSpeed) > 0.1) {
+                    const correctionFactor = desiredSpeed / speed;
+                    const correctedVelocity = velocity.scale(correctionFactor);
+                    particle.physicsBody?.setLinearVelocity(correctedVelocity);
                 }
-            });
+            }
+    
+            return true; 
+        });
     }
+    
 }

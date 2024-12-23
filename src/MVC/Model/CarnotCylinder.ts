@@ -22,7 +22,7 @@ export class CarnotCylinder {
         const piston_aggregate2 = this.createPhysics("Cylinder_primitive2");
         piston_aggregate2.body.setMotionType(PhysicsMotionType.ANIMATED);
         //Initial velocity:
-        piston_aggregate2.body.setLinearVelocity(new Vector3(0, -4, 0));
+        piston_aggregate2.body.setLinearVelocity(new Vector3(0, -2, 0));
         return piston_aggregate2;
     }
 

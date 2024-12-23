@@ -10,3 +10,7 @@ https://doc.babylonjs.com/features/featuresDeepDive/particles/solid_particle_sys
 https://playground.babylonjs.com/#2FPT1A#50
 
 # [Creating a Box Physics Body for an External Mesh (Transform Node)](https://forum.babylonjs.com/t/creating-a-box-physics-body-for-an-external-mesh-transform-node/47426)
+
+# Havok Physics
+
+https://playground.babylonjs.com/#RQIZD3#14
