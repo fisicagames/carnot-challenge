@@ -1,83 +1,98 @@
-import { Color3, Mesh, MeshBuilder, PhysicsAggregate, PhysicsShapeBox, PhysicsShapeSphere, Quaternion, Scene, StandardMaterial, TransformNode, Vector3 } from "@babylonjs/core";
+import { Color3, Mesh, MeshBuilder, PhysicsAggregate, PhysicsShapeBox, Quaternion, Scene, StandardMaterial, TransformNode, Vector3 } from "@babylonjs/core";
 
 export class GasParticles {
     private scene: Scene;
     private particlesNode: TransformNode;
     private particles: Mesh[] = [];
     private n: number;
+    private particleMaterial: StandardMaterial;
+    private shapeBox: PhysicsShapeBox;
 
-    constructor(scene: Scene, n: number) {
+    constructor(scene: Scene, n: number, pistonY: number) {
         this.scene = scene;
         this.n = n;
         this.particlesNode = new TransformNode("ParticleNode", this.scene);
-        this.createGasParticles(this.n);
-        //gas particle
 
-    }
-    createGasParticles(n: number) {
+        // Configurações reutilizáveis
+        this.particleMaterial = new StandardMaterial("Particle", this.scene);
+        this.particleMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
         //const shapeParticle = new PhysicsShapeSphere(new Vector3(0, 0, 0), 0.2, this.scene);
-        const shapeBox = new PhysicsShapeBox(
-            new Vector3(0, 0, 0),        // center of the box
-            new Quaternion(0, 0, 0, 1),  // rotation of the box
-            new Vector3(0.3, 0.3, 0.3),        // dimensions of the box
-            this.scene                                // scene of the shape
+
+        this.shapeBox = new PhysicsShapeBox(
+            new Vector3(0, 0, 0),
+            new Quaternion(0, 0, 0, 1),
+            new Vector3(0.3, 0.3, 0.3),
+            this.scene
         );
-        const particlePhysicsMaterial = {
-            friction: 0.0,
-            restitution: 1.0,
-        };
-        //shapeParticle.material = particlePhysicsMaterial;
-        shapeBox.material = particlePhysicsMaterial;
+        this.shapeBox.material = { friction: 0.0, restitution: 1.0 };
 
-        const particleMaterial = new StandardMaterial("Particle", this.scene);
-        particleMaterial.diffuseColor = new Color3(1.0, 1.0, 0.0);
+        this.createGasParticles(this.n, pistonY);
+    }
 
-        //Box limits: x: -5.5 5.5, y: -0.5 16.5, z: -5.5 5.5.
+    private createSingleParticle(position: Vector3): Mesh {
+        const particle = MeshBuilder.CreateSphere(
+            `particle_${this.particles.length}`,
+            { diameter: 0.7, segments: 8 },
+            this.scene
+        );
+
+        particle.parent = this.particlesNode;
+        particle.material = this.particleMaterial;
+        particle.position = position;
+
+        const particlePhysics = new PhysicsAggregate(
+            particle,
+            this.shapeBox,
+            { mass: 1, radius: 0.8 },
+            this.scene
+        );
+
+        const randomForce = new Vector3(
+            (Math.random() - 0.5),
+            (Math.random() - 0.5),
+            (Math.random() - 0.5)
+        );
+        particle.physicsBody?.applyImpulse(randomForce, particle.getAbsolutePosition());
+
+        return particle;
+    }
+
+    private generateRandomPosition(pistonY: number): Vector3 {
         const xRange = [-5, 5];
-        const yRange = [0, 13];
+        const yRange = [0, pistonY];
         const zRange = [-5, 5];
+
+        return new Vector3(
+            xRange[0] + Math.random() * (xRange[1] - xRange[0]),
+            yRange[0] + Math.random() * (yRange[1] - yRange[0]),
+            zRange[0] + Math.random() * (zRange[1] - zRange[0])
+        );
+    }
+
+    private createGasParticles(n: number, pistonY: number) {
         const numPerAxis = Math.ceil(Math.cbrt(n));
+        const xRange = [-5, 5];
+        const yRange = [0, pistonY];
+        const zRange = [-5, 5];
         const xStep = (xRange[1] - xRange[0]) / numPerAxis;
         const yStep = (yRange[1] - yRange[0]) / numPerAxis;
-        const zStep = (zRange[1] - zRange[0]) / numPerAxis;    
-        let particleCount = 0;
+        const zStep = (zRange[1] - zRange[0]) / numPerAxis;
 
+        let particleCount = 0;
 
         for (let i = 0; i < numPerAxis; i++) {
             for (let j = 0; j < numPerAxis; j++) {
                 for (let k = 0; k < numPerAxis; k++) {
                     if (particleCount >= n) break;
-    
-                    // Calcula a posição baseada na grade
-                    const x = xRange[0] + i * xStep + xStep / 2;
-                    const y = yRange[0] + j * yStep + yStep / 2;
-                    const z = zRange[0] + k * zStep + zStep / 2;
-    
-                    const particle = MeshBuilder.CreateSphere(
-                        `particle_${particleCount}`,
-                        { diameter: 0.7, segments: 8 },
-                        this.scene
+
+                    const position = new Vector3(
+                        xRange[0] + i * xStep + xStep / 2,
+                        yRange[0] + j * yStep + yStep / 2,
+                        zRange[0] + k * zStep + zStep / 2
                     );
-    
-                    particle.parent = this.particlesNode;
-                    particle.material = particleMaterial;
-                    particle.position = new Vector3(x, y, z);
-    
-                    const particlePhysics = new PhysicsAggregate(
-                        particle,
-                        shapeBox,
-                        { mass: 1, radius: 0.8 },
-                        this.scene
-                    );
+
+                    const particle = this.createSingleParticle(position);
                     this.particles.push(particle);
-    
-                    const randomForce = new Vector3(
-                        (Math.random() - 0.5),
-                        (Math.random() - 0.5),
-                        (Math.random() - 0.5) 
-                    );
-                    particle.physicsBody?.applyImpulse(randomForce, particle.getAbsolutePosition());
-    
                     particleCount++;
                 }
             }
@@ -85,30 +100,34 @@ export class GasParticles {
     }
 
     public updateGasParticleState(pistonY: number) {
-        const desiredSpeed = 15 * (3 - (1.9 + pistonY));
-    
+        const desiredSpeed = 7;
         const minX = -5.5, maxX = 5.5;
-        const minY = -0.5, maxY = 16.5;
+        const minY = -0.5, maxY = pistonY;
         const minZ = -5.5, maxZ = 5.5;
-    
+
         this.particles = this.particles.filter((particle) => {
             const position = particle.physicsBody?.transformNode?.position;
-    
+
             if (!position) {
                 return true;
             }
-    
+
             const outOfBounds =
                 position.x < minX || position.x > maxX ||
                 position.y < minY || position.y > maxY ||
                 position.z < minZ || position.z > maxZ;
-    
-            if (outOfBounds) {           
+
+            if (outOfBounds) {
                 particle.physicsBody?.dispose();
                 particle.dispose();
-                return false; 
+
+                // Substitui a partícula por uma nova dentro dos limites
+                const newParticle = this.createSingleParticle(this.generateRandomPosition(pistonY));
+                this.particles.push(newParticle);
+
+                return false;
             }
-    
+
             const velocity = particle.physicsBody?.getLinearVelocity();
             if (velocity) {
                 const speed = velocity.length();
@@ -118,9 +137,8 @@ export class GasParticles {
                     particle.physicsBody?.setLinearVelocity(correctedVelocity);
                 }
             }
-    
-            return true; 
+
+            return true;
         });
     }
-    
 }

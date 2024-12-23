@@ -3,7 +3,7 @@ import { Mesh, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShap
 export class CarnotCylinder {
     private scene: Scene;
     public piston: PhysicsAggregate;
-
+    
     constructor(scene: Scene) {
         this.scene = scene;
         this.createCylinderWalls();
@@ -19,8 +19,8 @@ export class CarnotCylinder {
     }
 
     private createPiston() {
-        const piston_aggregate2 = this.createPhysics("Cylinder_primitive2");
-        piston_aggregate2.body.setMotionType(PhysicsMotionType.ANIMATED);
+        const piston_aggregate2 = this.createPhysics("Cylinder.001");
+        piston_aggregate2.body.setMotionType(PhysicsMotionType.DYNAMIC);
         //Initial velocity:
         piston_aggregate2.body.setLinearVelocity(new Vector3(0, -2, 0));
         return piston_aggregate2;
@@ -31,5 +31,9 @@ export class CarnotCylinder {
         const shape = new PhysicsShapeMesh(mesh, this.scene);
         shape.material = { friction: 0.0, restitution: 1.0 };
         return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
+    }
+
+    public getPistonY(): number{
+        return this.piston.body.transformNode.position.y;
     }
 }

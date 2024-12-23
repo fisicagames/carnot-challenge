@@ -23,7 +23,8 @@ export class Model implements IModel {
         this.startMusic();
 
         this.carnotCylinder = new CarnotCylinder(this.scene);
-        this.gasParticles = new GasParticles(this.scene, 27);    
+        const pistonY = this.carnotCylinder.getPistonY();
+        this.gasParticles = new GasParticles(this.scene, 100, pistonY);    
         this.sourceBlocks = new SourceBlocks(this.scene);
         
         this.updateSceneModels();
@@ -47,13 +48,13 @@ export class Model implements IModel {
     private updateSceneModels() {
         this.scene.onBeforeRenderObservable.add(() => {
             //piston move:
-            if(this.carnotCylinder.piston.transformNode.position.y < -1.8){
+            if(this.carnotCylinder.piston.transformNode.position.y < 3){
                 this.carnotCylinder.piston.body.setLinearVelocity(new Vector3(0, 4, 0));
             }
-            else if (this.carnotCylinder.piston.body.transformNode.position.y > 0.5){
+            else if (this.carnotCylinder.piston.body.transformNode.position.y > 15){
                 this.carnotCylinder.piston.body.setLinearVelocity(new Vector3(0, -4, 0));
             }
-            const pistonY = this.carnotCylinder.piston.body.transformNode.position.y;
+            const pistonY = this.carnotCylinder.getPistonY();
             this.gasParticles.updateGasParticleState(pistonY);
                         
             
