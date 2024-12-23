@@ -4,9 +4,9 @@ export class SourceBlocks {
     private scene: Scene;
     private sourceTypes: number[] = [1, 2, 1, 0];
     private sourceTypeIndex: number = 2;
-    private sourceType: number = 1;
+    public sourceType: number = 1;
     private sourceBlockMaterial!: StandardMaterial;
-    private gl: GlowLayer;
+    private gl!: GlowLayer;    
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -50,5 +50,6 @@ export class SourceBlocks {
                 this.gl.intensity = 0.5;
                 break;
         }
+        return this.sourceType;
     }
 }

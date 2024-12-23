@@ -73,7 +73,10 @@ export class Controller {
         this.view.onButtonMenu(() => this.showMenu());
         this.view.onToggleMusic(() => this.toggleMusic());
         this.view.onButtonLang(() => this.changeLanguage());
-        this.view.buttonUpDown(() => { this.model.changeSourceTypes(); });
+        this.view.buttonUpDown(() => { 
+            const sourceType = Number(this.model.changeSourceTypes()).toString();
+            this.view.changeButtonUPSymbol(sourceType);
+        });
         //this.view.onButtonUpUp(() => { });
         this.view.setButtonUpUpCallback(() => null);
 
@@ -96,7 +99,7 @@ export class Controller {
 
     private startGame(): void {
         //TODO: Mudar para view:
-        this.view.changeButtonUPSymbol(`Fonte Quente`);
+        this.view.changeButtonUPSymbol("1");
         this.continueGame();
     }
     private startGameLinear(): void {

@@ -80,7 +80,8 @@ export class Model implements IModel {
     }
 
     public changeSourceTypes(){
-        this.sourceBlocks.changeSourceTypes();
+        const sourceType = this.sourceBlocks.changeSourceTypes();
+        return sourceType;
     }
 
 }

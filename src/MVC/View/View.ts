@@ -220,6 +220,15 @@ export class View implements IView {
             console.warn(`[WARNING]: buttonUp.textBlock is null or undefined.`);
             return; 
         }
-        this.buttonUp.textBlock.text = string;
+        if(string == "0"){
+            this.buttonUp.textBlock.text = "Fonte Quente";
+        }
+        else if(string == "1"){
+            this.buttonUp.textBlock.text = "Isolante";
+        }
+        else {
+            this.buttonUp.textBlock.text = "Fonte Fria";
+        }
+        
     }
 }
