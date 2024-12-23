@@ -7,6 +7,7 @@ export class GasParticles {
     private n: number;
     private particleMaterial: StandardMaterial;
     private shapeBox: PhysicsShapeBox;
+    public desiredGasSpeed: number = 7;
 
     constructor(scene: Scene, n: number, pistonY: number) {
         this.scene = scene;
@@ -47,13 +48,17 @@ export class GasParticles {
             this.scene
         );
 
-        const randomForce = new Vector3(
+        particlePhysics.body?.setLinearDamping(0.0);
+        particlePhysics.body?.setAngularDamping(0.0);
+
+        const randomDirection = new Vector3(
             (Math.random() - 0.5),
             (Math.random() - 0.5),
             (Math.random() - 0.5)
-        );
-        particle.physicsBody?.applyImpulse(randomForce, particle.getAbsolutePosition());
-
+        ).normalize(); 
+        const initialVelocity = randomDirection.scale(this.desiredGasSpeed);
+        
+        particle.physicsBody?.setLinearVelocity(initialVelocity);
         return particle;
     }
 
@@ -100,7 +105,6 @@ export class GasParticles {
     }
 
     public updateGasParticleState(pistonY: number) {
-        const desiredSpeed = 7;
         const minX = -5.5, maxX = 5.5;
         const minY = -0.5, maxY = pistonY;
         const minZ = -5.5, maxZ = 5.5;
@@ -131,8 +135,8 @@ export class GasParticles {
             const velocity = particle.physicsBody?.getLinearVelocity();
             if (velocity) {
                 const speed = velocity.length();
-                if (Math.abs(speed - desiredSpeed) > 0.1) {
-                    const correctionFactor = desiredSpeed / speed;
+                if (Math.abs(speed - this.desiredGasSpeed) > this.desiredGasSpeed/10) {
+                    const correctionFactor = this.desiredGasSpeed / speed;
                     const correctedVelocity = velocity.scale(correctionFactor);
                     particle.physicsBody?.setLinearVelocity(correctedVelocity);
                 }
