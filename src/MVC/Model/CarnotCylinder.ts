@@ -36,4 +36,6 @@ export class CarnotCylinder {
     public getPistonY(): number{
         return this.piston.body.transformNode.position.y;
     }
+
+    
 }

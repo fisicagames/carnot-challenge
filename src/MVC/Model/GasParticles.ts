@@ -33,7 +33,7 @@ export class GasParticles {
     private createSingleParticle(position: Vector3): Mesh {
         const particle = MeshBuilder.CreateSphere(
             `particle_${this.particles.length}`,
-            { diameter: 0.7, segments: 4 },
+            { diameter: 0.8, segments: 4 },
             this.scene
         );
 
@@ -53,7 +53,7 @@ export class GasParticles {
 
         const randomDirection = new Vector3(
             (Math.random() - 0.5),
-            (Math.random() - 0.5),
+            (-Math.random()),
             (Math.random() - 0.5)
         ).normalize(); 
         const initialVelocity = randomDirection.scale(this.desiredGasSpeed);
