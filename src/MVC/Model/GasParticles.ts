@@ -33,7 +33,7 @@ export class GasParticles {
     private createSingleParticle(position: Vector3): Mesh {
         const particle = MeshBuilder.CreateSphere(
             `particle_${this.particles.length}`,
-            { diameter: 0.7, segments: 8 },
+            { diameter: 0.7, segments: 4 },
             this.scene
         );
 
@@ -44,7 +44,7 @@ export class GasParticles {
         const particlePhysics = new PhysicsAggregate(
             particle,
             this.shapeBox,
-            { mass: 1, radius: 0.8 },
+            { mass: 1, radius: 0.4 },
             this.scene
         );
 
@@ -109,7 +109,7 @@ export class GasParticles {
         const minY = -0.5, maxY = pistonY;
         const minZ = -5.5, maxZ = 5.5;
 
-        this.particles = this.particles.filter((particle) => {
+        this.particles.forEach((particle, index) => {
             const position = particle.physicsBody?.transformNode?.position;
 
             if (!position) {
@@ -124,6 +124,8 @@ export class GasParticles {
             if (outOfBounds) {
                 particle.physicsBody?.dispose();
                 particle.dispose();
+                this.particles.splice(index, 1);
+
 
                 // Substitui a partícula por uma nova dentro dos limites
                 const newParticle = this.createSingleParticle(this.generateRandomPosition(pistonY));
