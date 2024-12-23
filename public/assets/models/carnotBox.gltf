@@ -256,35 +256,35 @@
         {
             "bufferView" : 12,
             "componentType" : 5126,
-            "count" : 24,
+            "count" : 56,
             "max" : [
-                0.9134240746498108,
-                1.524740219116211,
-                0.9134240746498108
+                0.8978045582771301,
+                2.617805004119873,
+                0.8978045582771301
             ],
             "min" : [
-                -0.9134240746498108,
+                -0.8978045582771301,
                 1.3988436460494995,
-                -0.9134240746498108
+                -0.8978045582771301
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 13,
             "componentType" : 5126,
-            "count" : 24,
+            "count" : 56,
             "type" : "VEC3"
         },
         {
             "bufferView" : 14,
             "componentType" : 5126,
-            "count" : 24,
+            "count" : 56,
             "type" : "VEC2"
         },
         {
             "bufferView" : 15,
             "componentType" : 5123,
-            "count" : 36,
+            "count" : 84,
             "type" : "SCALAR"
         }
     ],
@@ -351,28 +351,28 @@
         },
         {
             "buffer" : 0,
-            "byteLength" : 288,
+            "byteLength" : 672,
             "byteOffset" : 3588
         },
         {
             "buffer" : 0,
-            "byteLength" : 288,
-            "byteOffset" : 3876
+            "byteLength" : 672,
+            "byteOffset" : 4260
         },
         {
             "buffer" : 0,
-            "byteLength" : 192,
-            "byteOffset" : 4164
+            "byteLength" : 448,
+            "byteOffset" : 4932
         },
         {
             "buffer" : 0,
-            "byteLength" : 72,
-            "byteOffset" : 4356
+            "byteLength" : 168,
+            "byteOffset" : 5380
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 4428,
+            "byteLength" : 5548,
             "uri" : "carnotBox.bin"
         }
     ]
