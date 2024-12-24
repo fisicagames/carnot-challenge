@@ -3,6 +3,10 @@ import { Mesh, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShap
 export class CarnotCylinder {
     private scene: Scene;
     public piston: PhysicsAggregate;
+    private pistonYVelocity: number = 1;
+    private pistionYAcceleration: number = 1;
+    private pistonYPosition: number = 3;
+
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -21,8 +25,7 @@ export class CarnotCylinder {
     private createPiston() {
         const piston_aggregate2 = this.createPhysics("Cylinder.001");
         piston_aggregate2.body.setMotionType(PhysicsMotionType.DYNAMIC);
-        //Initial velocity:
-        piston_aggregate2.body.setLinearVelocity(new Vector3(0, -2, 0));
+        this.pistonYPosition = piston_aggregate2.body.transformNode.position.y;
         return piston_aggregate2;
     }
 
@@ -37,16 +40,28 @@ export class CarnotCylinder {
         return this.piston.body.transformNode.position.y;
     }
 
-    public updatePistonMove() {
+    public updatePistonMove(sourceType: number, gasTemperature: number) {
         //piston move:
-        if (this.piston.transformNode.position.y < 3) {
-            this.piston.body.setLinearVelocity(new Vector3(0, 4, 0));
+        if (sourceType === 0){
+            this.piston.body.setLinearVelocity(new Vector3(0, 1, 0));
         }
-        else if (this.piston.body.transformNode.position.y > 15) {
-            this.piston.body.setLinearVelocity(new Vector3(0, -4, 0));
+        if (this.piston.transformNode.position.y < 3) {
+            this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+        }
+        else if (sourceType === 0 && this.piston.body.transformNode.position.y > 16) {
+            this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+            const randomImpulse = new Vector3(
+                (Math.random() - 0.5) * 200,
+                600,
+                (Math.random() - 0.5) * 200
+            );
+            this.piston.body.applyImpulse(randomImpulse, this.piston.body.transformNode.position);
+        }
+        else if (sourceType !== 0 && this.piston.body.transformNode.position.y > 16) {
+            this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
         }
         else {
-            this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+            //this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
         }
     }
 

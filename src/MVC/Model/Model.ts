@@ -47,7 +47,9 @@ export class Model implements IModel {
 
     private updateSceneModels() {
         this.scene.onBeforeRenderObservable.add(() => {
-            this.carnotCylinder.updatePistonMove();
+            const sourceType = this.sourceBlocks.getSourceType();
+            const gasTemperature = this.gasParticles.getGasCurrentTemperature();
+            this.carnotCylinder.updatePistonMove(sourceType, gasTemperature);
             const pistonY = this.carnotCylinder.getPistonY();
             this.gasParticles.updateGasParticleState(pistonY);
         });
