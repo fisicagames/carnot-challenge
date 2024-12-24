@@ -3,11 +3,11 @@ import { Mesh, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShap
 export class CarnotCylinder {
     private scene: Scene;
     public piston: PhysicsAggregate;
-    
+
     constructor(scene: Scene) {
         this.scene = scene;
         this.createCylinderWalls();
-        this.piston  = this.createPiston();
+        this.piston = this.createPiston();
     }
 
     private createCylinderWalls() {
@@ -33,9 +33,22 @@ export class CarnotCylinder {
         return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
     }
 
-    public getPistonY(): number{
+    public getPistonY(): number {
         return this.piston.body.transformNode.position.y;
     }
 
-    
+    public updatePistonMove() {
+        //piston move:
+        if (this.piston.transformNode.position.y < 3) {
+            this.piston.body.setLinearVelocity(new Vector3(0, 4, 0));
+        }
+        else if (this.piston.body.transformNode.position.y > 15) {
+            this.piston.body.setLinearVelocity(new Vector3(0, -4, 0));
+        }
+        else {
+            this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+        }
+    }
+
+
 }

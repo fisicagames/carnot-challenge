@@ -47,17 +47,9 @@ export class Model implements IModel {
 
     private updateSceneModels() {
         this.scene.onBeforeRenderObservable.add(() => {
-            //piston move:
-            if(this.carnotCylinder.piston.transformNode.position.y < 3){
-                this.carnotCylinder.piston.body.setLinearVelocity(new Vector3(0, 4, 0));
-            }
-            else if (this.carnotCylinder.piston.body.transformNode.position.y > 15){
-                this.carnotCylinder.piston.body.setLinearVelocity(new Vector3(0, -4, 0));
-            }
+            this.carnotCylinder.updatePistonMove();
             const pistonY = this.carnotCylinder.getPistonY();
-            this.gasParticles.updateGasParticleState(pistonY);
-                        
-            
+            this.gasParticles.updateGasParticleState(pistonY);            
         });
     }
 
@@ -80,8 +72,8 @@ export class Model implements IModel {
     }
 
     public changeSourceTypes(){
-        const sourceType = this.sourceBlocks.changeSourceTypes();
-        return sourceType;
+        this.sourceBlocks.changeSourceTypes();
+        return this.sourceBlocks.getSourceType();
     }
 
 }

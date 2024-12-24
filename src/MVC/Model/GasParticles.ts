@@ -7,7 +7,7 @@ export class GasParticles {
     private n: number;
     private particleMaterial: StandardMaterial;
     private shapeBox: PhysicsShapeBox;
-    public desiredGasSpeed: number = 7;
+    public desiredGasSpeed: number = 20.0;
 
     constructor(scene: Scene, n: number, pistonY: number) {
         this.scene = scene;
