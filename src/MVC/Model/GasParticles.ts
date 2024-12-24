@@ -147,4 +147,17 @@ export class GasParticles {
             return true;
         });
     }
+    public setParticleEmissiveColor(temperature: number) {
+        let hue = 180 - temperature; //0 to 180;
+        if(hue > 180){
+            hue = 180;
+        }
+        else if (hue <= 0){
+            hue = 0;
+        }
+        const saturation = Math.abs(hue-90)/90;
+        console.log(hue, saturation)
+        const value = saturation/2;
+        this.particleMaterial.emissiveColor = Color3.FromHSV(hue,saturation,value);
+    }
 }

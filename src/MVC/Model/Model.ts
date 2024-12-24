@@ -11,7 +11,7 @@ export class Model implements IModel {
     private physicsPlugin: HavokPlugin | null;
     private endGameCallback: ((isVisible: boolean) => void) | null = null;
     public endGAme: boolean = false;
-    
+
     private carnotCylinder: CarnotCylinder;
     private gasParticles: GasParticles;
     private sourceBlocks: SourceBlocks;
@@ -19,14 +19,14 @@ export class Model implements IModel {
     constructor(scene: Scene, physicsPlugin?: HavokPlugin | null) {
         this.scene = scene;
         this.physicsPlugin = physicsPlugin || null;
-  
+
         this.startMusic();
 
         this.carnotCylinder = new CarnotCylinder(this.scene);
         const pistonY = this.carnotCylinder.getPistonY();
-        this.gasParticles = new GasParticles(this.scene, 100, pistonY);    
+        this.gasParticles = new GasParticles(this.scene, 100, pistonY);
         this.sourceBlocks = new SourceBlocks(this.scene);
-        
+
         this.updateSceneModels();
 
     }
@@ -49,15 +49,15 @@ export class Model implements IModel {
         this.scene.onBeforeRenderObservable.add(() => {
             this.carnotCylinder.updatePistonMove();
             const pistonY = this.carnotCylinder.getPistonY();
-            this.gasParticles.updateGasParticleState(pistonY);            
+            this.gasParticles.updateGasParticleState(pistonY);
         });
     }
 
 
     public toggleMusicPlayback(): void {
-        if(this.backgroundMusic){
+        if (this.backgroundMusic) {
             this.backgroundMusic.togglePlayback();
-        }            
+        }
     }
 
     public setEndGameCallback(callback: (isVisible: boolean) => void): void {
@@ -71,8 +71,10 @@ export class Model implements IModel {
         this.onUpdateScoreCallback = callback;
     }
 
-    public changeSourceTypes(){
+    public changeSourceTypes() {
         this.sourceBlocks.changeSourceTypes();
+        const temperature = (2 - this.sourceBlocks.getSourceType()) * 90;
+        this.gasParticles.setParticleEmissiveColor(temperature);
         return this.sourceBlocks.getSourceType();
     }
 
