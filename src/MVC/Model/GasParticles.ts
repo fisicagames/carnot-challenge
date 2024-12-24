@@ -8,7 +8,7 @@ export class GasParticles {
     private particleMaterial: StandardMaterial;
     private shapeBox: PhysicsShapeBox;
     private sourceTemperature: number = 180;
-    public desiredGasSpeed: number = 20 * this.sourceTemperature / 180;
+    private desiredGasSpeed: number = 20 * this.sourceTemperature / 180;
     private accelerationTemperature: number = 40;
     private currentGasTemperatura: number = 180; //initial
 
@@ -152,7 +152,7 @@ export class GasParticles {
             this.currentGasTemperatura += this.accelerationTemperature * Math.sign(this.sourceTemperature - this.currentGasTemperatura) * this.scene.deltaTime/1000;
         }
 
-        this.desiredGasSpeed = 20 * this.currentGasTemperatura/180 + 1;
+        this.desiredGasSpeed = 20 * this.currentGasTemperatura/180 + 2;
         let hue = 180 - this.currentGasTemperatura; //0 to 180;
         if (hue > 180) {
             hue = 180;
@@ -167,5 +167,9 @@ export class GasParticles {
     }
     public setGasSourceTemperature(sourceTemperature: number) {
         this.sourceTemperature = sourceTemperature;
+    }
+
+    public getGasCurrentTemperature(){
+        return this.currentGasTemperatura;
     }
 }
