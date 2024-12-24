@@ -1,8 +1,14 @@
-# GUI
+# GUI and Colors
 
 https://gui.babylonjs.com/#F8FKK5#3
 
 https://buttonbuddy.dev/
+
+https://colorpicker.me/#2096b0
+
+https://www.joshwcomeau.com/css/color-formats/
+
+https://www.selecolor.com/en/hsv-color-picker/
 
 # Optimizing Solid Particle Systems
 

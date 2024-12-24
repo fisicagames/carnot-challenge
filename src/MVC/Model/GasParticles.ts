@@ -7,7 +7,10 @@ export class GasParticles {
     private n: number;
     private particleMaterial: StandardMaterial;
     private shapeBox: PhysicsShapeBox;
-    public desiredGasSpeed: number = 20.0;
+    private sourceTemperature: number = 180;
+    public desiredGasSpeed: number = 20 * this.sourceTemperature / 180;
+    private accelerationTemperature: number = 40;
+    private currentGasTemperatura: number = 180; //initial
 
     constructor(scene: Scene, n: number, pistonY: number) {
         this.scene = scene;
@@ -55,9 +58,9 @@ export class GasParticles {
             (Math.random() - 0.5),
             (-Math.random()),
             (Math.random() - 0.5)
-        ).normalize(); 
+        ).normalize();
         const initialVelocity = randomDirection.scale(this.desiredGasSpeed);
-        
+
         particle.physicsBody?.setLinearVelocity(initialVelocity);
         return particle;
     }
@@ -105,6 +108,8 @@ export class GasParticles {
     }
 
     public updateGasParticleState(pistonY: number) {
+        this.updateCurrentGasTemperature();
+
         const minX = -5.5, maxX = 5.5;
         const minY = -0.5, maxY = pistonY;
         const minZ = -5.5, maxZ = 5.5;
@@ -126,38 +131,41 @@ export class GasParticles {
                 particle.dispose();
                 this.particles.splice(index, 1);
 
-
-                // Substitui a partícula por uma nova dentro dos limites
                 const newParticle = this.createSingleParticle(this.generateRandomPosition(pistonY));
                 this.particles.push(newParticle);
-
-                return false;
             }
-
-            const velocity = particle.physicsBody?.getLinearVelocity();
-            if (velocity) {
-                const speed = velocity.length();
-                if (Math.abs(speed - this.desiredGasSpeed) > this.desiredGasSpeed/10) {
-                    const correctionFactor = this.desiredGasSpeed / speed;
-                    const correctedVelocity = velocity.scale(correctionFactor);
-                    particle.physicsBody?.setLinearVelocity(correctedVelocity);
+            else {
+                const velocity = particle.physicsBody?.getLinearVelocity();
+                if (velocity) {
+                    const speed = velocity.length();
+                    if (Math.abs(speed - this.desiredGasSpeed) > this.desiredGasSpeed / 10) {
+                        const correctionFactor = this.desiredGasSpeed / speed;
+                        const correctedVelocity = velocity.scale(correctionFactor);
+                        particle.physicsBody?.setLinearVelocity(correctedVelocity);
+                    }
                 }
             }
-
-            return true;
         });
     }
-    public setParticleEmissiveColor(temperature: number) {
-        let hue = 180 - temperature; //0 to 180;
-        if(hue > 180){
+    private updateCurrentGasTemperature() {
+        if (Math.abs(this.currentGasTemperatura - this.sourceTemperature) > 1) {
+            this.currentGasTemperatura += this.accelerationTemperature * Math.sign(this.sourceTemperature - this.currentGasTemperatura) * this.scene.deltaTime/1000;
+        }
+
+        this.desiredGasSpeed = 20 * this.currentGasTemperatura/180 + 1;
+        let hue = 180 - this.currentGasTemperatura; //0 to 180;
+        if (hue > 180) {
             hue = 180;
         }
-        else if (hue <= 0){
+        else if (hue <= 0) {
             hue = 0;
         }
-        const saturation = Math.abs(hue-90)/90;
-        console.log(hue, saturation)
-        const value = saturation/2;
-        this.particleMaterial.emissiveColor = Color3.FromHSV(hue,saturation,value);
+        const saturation = Math.abs(hue - 90) / 90;
+        const value = saturation / 2;
+        //console.log(hue, saturation, value);
+        this.particleMaterial.emissiveColor = Color3.FromHSV(hue, saturation, value);
+    }
+    public setGasSourceTemperature(sourceTemperature: number) {
+        this.sourceTemperature = sourceTemperature;
     }
 }

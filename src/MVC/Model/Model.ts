@@ -73,9 +73,15 @@ export class Model implements IModel {
 
     public changeSourceTypes() {
         this.sourceBlocks.changeSourceTypes();
-        const temperature = (2 - this.sourceBlocks.getSourceType()) * 90;
-        this.gasParticles.setParticleEmissiveColor(temperature);
+        let sourceTemperature: number = 0;
+        if (this.sourceBlocks.getSourceType() == 0){
+            sourceTemperature = 180;
+            this.gasParticles.setGasSourceTemperature(sourceTemperature);
+        }
+        else if(this.sourceBlocks.getSourceType() == 2){
+            sourceTemperature = 0;
+            this.gasParticles.setGasSourceTemperature(sourceTemperature);
+        }
         return this.sourceBlocks.getSourceType();
     }
-
 }
