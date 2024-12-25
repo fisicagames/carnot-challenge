@@ -74,15 +74,17 @@ export class Model implements IModel {
     }
 
     public changeSourceTypes() {
-        this.sourceBlocks.changeSourceTypes();
-        let sourceTemperature: number = 0;
-        if (this.sourceBlocks.getSourceType() == 0){
-            sourceTemperature = 180;
-            this.gasParticles.setGasSourceTemperature(sourceTemperature);
-        }
-        else if(this.sourceBlocks.getSourceType() == 2){
-            sourceTemperature = 0;
-            this.gasParticles.setGasSourceTemperature(sourceTemperature);
+        if(this.carnotCylinder.pistonIsWorking){
+            this.sourceBlocks.changeSourceTypes();
+            let sourceTemperature: number = 0;
+            if (this.sourceBlocks.getSourceType() == 0){
+                sourceTemperature = 180;
+                this.gasParticles.setGasSourceTemperature(sourceTemperature);
+            }
+            else if(this.sourceBlocks.getSourceType() == 2){
+                sourceTemperature = 0;
+                this.gasParticles.setGasSourceTemperature(sourceTemperature);
+            }
         }
         return this.sourceBlocks.getSourceType();
     }

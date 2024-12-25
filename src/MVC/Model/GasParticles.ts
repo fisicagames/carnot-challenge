@@ -152,7 +152,7 @@ export class GasParticles {
             this.currentGasTemperatura += this.accelerationTemperature * Math.sign(this.sourceTemperature - this.currentGasTemperatura) * this.scene.deltaTime/1000;
         }
 
-        this.desiredGasSpeed = 20 * this.currentGasTemperatura/180 + 2;
+        this.desiredGasSpeed = 20 * this.currentGasTemperatura/180 + 1;
         let hue = 180 - this.currentGasTemperatura; //0 to 180;
         if (hue > 180) {
             hue = 180;
