@@ -1,12 +1,12 @@
-import { Mesh, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Scene, Vector3 } from "@babylonjs/core";
+import { Color3, Mesh, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
 
 export class CarnotCylinder {
     private scene: Scene;
     public piston: PhysicsAggregate;
     private cylinder_aggregate0!: PhysicsAggregate;
     private cylinder_aggregate1!: PhysicsAggregate;
-    private pistonYVelocityIsothermal: number = 1;
-    private pistonYVelocityAdiabatic: number = 2;
+    private pistonYVelocityIsothermal: number = 1.0;
+    private pistonYVelocityAdiabatic: number = 1.5;
     private pistonYPosition: number = 3;
     public pistonIsWorking: boolean = true;
     private static readonly VOLUME_MAX: number = 16;
@@ -47,44 +47,63 @@ export class CarnotCylinder {
     public updatePistonMove(sourceType: number, sourceTypeIndex: number, gasTemperature1to180: number) {
         //piston move:
         if (this.pistonIsWorking) {
-            if (sourceType !== 0 && this.piston.body.transformNode.position.y < CarnotCylinder.VOLUME_MIN) {
+            if (sourceType !== 0 && this.piston.body.transformNode.position.y < CarnotCylinder.VOLUME_MIN){
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+                console.log("if 01a: Volume mínimo.");
             }
-            else if (sourceType === 0 && this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MAX) {
+            else if (sourceType !== 0 && this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MAX){
+                this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+                console.log("if 01b: Volume máximo.");
+            }
+            else if (sourceType === 0 && this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MAX && gasTemperature1to180 > 150) {
                 this.piston.body.setMassProperties({ mass: 1 });
                 this.cylinder_aggregate0.body.setMassProperties({ mass: 1 });
                 this.cylinder_aggregate1.body.setMassProperties({ mass: 1 });
                 this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.DYNAMIC);
                 this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.DYNAMIC);
+                const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
+                boxMaterial.emissiveColor = Color3.FromHexString("#530000");
+
                 this.pistonIsWorking = false;
-                console.log("quebrou");
+                console.log("if 02");
             }
             else if (sourceType === 1 && this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+                console.log("if 03: Volume máximo.");
             }
             else if (sourceType === 0 && gasTemperature1to180 > 179) {
                 this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityIsothermal, 0));
+                console.log("if 04: Expansão Isotérmica.");
             }
             else if (sourceType === 2 && gasTemperature1to180 < 2) {
                 this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityIsothermal, 0));
+                console.log("if 05: Compreensão isotérmica.");
             }
             else if (sourceType === 1 && sourceTypeIndex == 0) {
                 if (this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX){
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+                    console.log("if 06");
                 }
                 this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityAdiabatic, 0));
-                
-
+                console.log("if 07: Expansão adiabática.");
             }
             else if (sourceType === 1 && sourceTypeIndex == 2) {
                 if (this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN){
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+                    console.log("if 08");
                 }
                 else {
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityAdiabatic, 0));
+                    console.log("if 09");
                 }
+                console.log("if 10");
                 
             }
         }
+        else{
+            console.log("if 11");
+
+        }
+
     }
 }

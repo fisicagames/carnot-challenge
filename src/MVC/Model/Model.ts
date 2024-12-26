@@ -2,8 +2,9 @@ import { Scene, HavokPlugin, MeshBuilder, Vector3, Mesh, PhysicsAggregate, Trans
 import { IModel } from "./IModel";
 import { SoundModel } from "./SoundModel";
 import { CarnotCylinder } from "./CarnotCylinder";
-import { GasParticles } from "./gasParticles";
+
 import { SourceBlocks } from "./SourceBlocks";
+import { GasParticles } from "./GasParticles";
 export class Model implements IModel {
     private scene: Scene;
     public backgroundMusic?: SoundModel;
@@ -85,8 +86,7 @@ export class Model implements IModel {
             else if(this.sourceBlocks.getSourceType() == 2 || this.sourceBlocks.getSourceTypeIndex() == 0){
                 sourceTemperature = 1;
                 this.gasParticles.setGasSourceTemperature(sourceTemperature);
-            }
-            console.log(this.sourceBlocks.getSourceType(),this.sourceBlocks.getSourceTypeIndex(),sourceTemperature);      
+            }            
         }
         return this.sourceBlocks.getSourceType();
     }

@@ -120,7 +120,7 @@ export class GasParticles {
             const position = particle.physicsBody?.transformNode?.position;
 
             if (!position) {
-                return true;
+                return;
             }
 
             const outOfBounds =
