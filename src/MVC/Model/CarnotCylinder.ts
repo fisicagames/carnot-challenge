@@ -47,15 +47,16 @@ export class CarnotCylinder {
     public updatePistonMove(sourceType: number, sourceTypeIndex: number, gasTemperature1to180: number) {
         //piston move:
         if (this.pistonIsWorking) {
-            if (sourceType !== 0 && this.piston.body.transformNode.position.y < CarnotCylinder.VOLUME_MIN){
+            if (sourceType !== 0 && this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                 console.log("if 01a: Volume mínimo.");
             }
-            else if (sourceType !== 0 && this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MAX){
+            if (sourceType !== 0 && this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX &&
+                this.piston.body.getLinearVelocity().y !== 0) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                 console.log("if 01b: Volume máximo.");
             }
-            else if (sourceType === 0 && this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MAX && gasTemperature1to180 > 150) {
+            else if (sourceType === 0 && this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MAX && gasTemperature1to180 > 170) {
                 this.piston.body.setMassProperties({ mass: 1 });
                 this.cylinder_aggregate0.body.setMassProperties({ mass: 1 });
                 this.cylinder_aggregate1.body.setMassProperties({ mass: 1 });
@@ -80,7 +81,7 @@ export class CarnotCylinder {
                 console.log("if 05: Compreensão isotérmica.");
             }
             else if (sourceType === 1 && sourceTypeIndex == 0) {
-                if (this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX){
+                if (this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     console.log("if 06");
                 }
@@ -88,19 +89,20 @@ export class CarnotCylinder {
                 console.log("if 07: Expansão adiabática.");
             }
             else if (sourceType === 1 && sourceTypeIndex == 2) {
-                if (this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN){
+                if (this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                    console.log("if 08");
+                    console.log("if 08: Volume mínimo.");
                 }
                 else {
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityAdiabatic, 0));
-                    console.log("if 09");
+                    console.log("if 09: Compressão adiabática");
                 }
-                console.log("if 10");
-                
+            }
+            else {
+                console.log("if 12: Compressão não adiabática")
             }
         }
-        else{
+        else {
             console.log("if 11");
 
         }
