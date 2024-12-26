@@ -77,8 +77,10 @@ export class CarnotCylinder {
                 console.log("if 04: Expansão Isotérmica.");
             }
             else if (sourceType === 2 && gasTemperature1to180 < 2) {
-                this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityIsothermal, 0));
-                console.log("if 05: Compreensão isotérmica.");
+                if(this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MIN){
+                    this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityIsothermal, 0));
+                    console.log("if 05: Compressão isotérmica.");
+                }                                
             }
             else if (sourceType === 1 && sourceTypeIndex == 0) {
                 if (this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX) {
@@ -111,13 +113,11 @@ export class CarnotCylinder {
                 }
                 else{
                     console.log("if 12b: Compressão não adiabática")
-                }
-                
+                }                
             }
         }
         else {
             console.log("if 11");
-
         }
 
     }
