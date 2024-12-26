@@ -13,6 +13,7 @@ export class GasParticles {
     private currentGasTemperatura1to180: number = 180; //initial
     private static readonly VELOCITY_MIN: number = 1;
     private static readonly VELOCITY_MAX: number = 20;
+    private frozenState: boolean = false;
 
     constructor(scene: Scene, n: number, pistonY: number) {
         this.scene = scene;
@@ -140,12 +141,15 @@ export class GasParticles {
                 const velocity = particle.physicsBody?.getLinearVelocity();
                 if (velocity) {
                     const speed = velocity.length();
+                    if(this.frozenState){
+                        this.desiredGasSpeed = 0.2;
+                    }
                     if (Math.abs(speed - this.desiredGasSpeed) > this.desiredGasSpeed / 10) {
                         const correctionFactor = this.desiredGasSpeed / speed;
                         const correctedVelocity = velocity.scale(correctionFactor);
                         particle.physicsBody?.setLinearVelocity(correctedVelocity);
                     }
-                }
+                }                
             }
         });
     }
@@ -155,13 +159,16 @@ export class GasParticles {
         }
         this.desiredGasSpeed = GasParticles.VELOCITY_MAX * Math.sqrt(this.currentGasTemperatura1to180/180);
         this.desiredGasSpeed = Math.max(GasParticles.VELOCITY_MIN,this.desiredGasSpeed);
+
         let hue = 180 - this.currentGasTemperatura1to180; //0 to 180;
+        
         if (hue > 180) {
             hue = 180;
         }
         else if (hue <= 0) {
             hue = 0;
         }
+
         const saturation = Math.abs(hue - 90) / 90;
         const value = saturation / 2;
         this.particleMaterial.emissiveColor = Color3.FromHSV(hue, saturation, value);
@@ -172,5 +179,8 @@ export class GasParticles {
 
     public getGasCurrentTemperature(){
         return this.currentGasTemperatura1to180;
+    }
+    public frozenGas(){
+        this.frozenState = true;        
     }
 }

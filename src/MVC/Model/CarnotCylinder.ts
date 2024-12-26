@@ -11,6 +11,7 @@ export class CarnotCylinder {
     public pistonIsWorking: boolean = true;
     private static readonly VOLUME_MAX: number = 16;
     private static readonly VOLUME_MIN: number = 2;
+    private onCylinderFrozenCallback!: (() => void); 
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -47,9 +48,17 @@ export class CarnotCylinder {
     public updatePistonMove(sourceType: number, sourceTypeIndex: number, gasTemperature1to180: number) {
         //piston move:
         if (this.pistonIsWorking) {
-            if (sourceType !== 0 && this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN) {
+            if (this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                 console.log("if 01a: Volume mínimo.");
+                if(sourceType == 2 && gasTemperature1to180 < 2){
+                    this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
+                    const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
+                    boxMaterial.emissiveColor = Color3.FromHexString("#0000FF");
+                    this.pistonIsWorking = false;
+                    console.log("if 02: Sistema Congelado!");
+                    this.onCylinderFrozenCallback();
+                }
             }
             if (sourceType !== 0 && this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX &&
                 this.piston.body.getLinearVelocity().y !== 0) {
@@ -66,7 +75,7 @@ export class CarnotCylinder {
                 boxMaterial.emissiveColor = Color3.FromHexString("#530000");
 
                 this.pistonIsWorking = false;
-                console.log("if 02");
+                console.log("if 02: Máquina Fundida!");
             }
             else if (sourceType === 1 && this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
@@ -89,7 +98,7 @@ export class CarnotCylinder {
                 }
                 else if(gasTemperature1to180 > 2){
                     this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityAdiabatic, 0));
-                    console.log("if 07a: Expansão adiabática. ", gasTemperature1to180);
+                    console.log("if 07a: Expansão adiabática.");
                 }
                 else{
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
@@ -102,9 +111,13 @@ export class CarnotCylinder {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     console.log("if 08: Volume mínimo.");
                 }
-                else {
+                else if (gasTemperature1to180 < 179){
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityAdiabatic, 0));
-                    console.log("if 09: Compressão adiabática");
+                    console.log("if 09a: Compressão adiabática");
+                }
+                else {
+                    this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+                    console.log("if 09b: Alta pressão.");
                 }
             }
             else {
@@ -116,9 +129,8 @@ export class CarnotCylinder {
                 }                
             }
         }
-        else {
-            console.log("if 11");
-        }
-
+    }
+    public setCylinderFrozenCallback(callback: () => void) {
+        this.onCylinderFrozenCallback = callback;
     }
 }

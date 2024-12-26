@@ -30,6 +30,8 @@ export class Model implements IModel {
 
         this.updateSceneModels();
 
+        this.carnotCylinder.setCylinderFrozenCallback(()=>this.gasParticles.frozenGas())
+
     }
 
     private startMusic() {
@@ -89,5 +91,5 @@ export class Model implements IModel {
             }            
         }
         return this.sourceBlocks.getSourceType();
-    }
+    }    
 }
