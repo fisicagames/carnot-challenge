@@ -10,7 +10,9 @@ export class GasParticles {
     private sourceTemperature: number = 180;
     private desiredGasSpeed: number = 20 * this.sourceTemperature / 180;
     private accelerationTemperature: number = 40;
-    private currentGasTemperatura: number = 180; //initial
+    private currentGasTemperatura1to180: number = 180; //initial
+    private static readonly VELOCITY_MIN: number = 1;
+    private static readonly VELOCITY_MAX: number = 20;
 
     constructor(scene: Scene, n: number, pistonY: number) {
         this.scene = scene;
@@ -148,12 +150,12 @@ export class GasParticles {
         });
     }
     private updateCurrentGasTemperature() {
-        if (Math.abs(this.currentGasTemperatura - this.sourceTemperature) > 1) {
-            this.currentGasTemperatura += this.accelerationTemperature * Math.sign(this.sourceTemperature - this.currentGasTemperatura) * this.scene.deltaTime/1000;
+        if (Math.abs(this.currentGasTemperatura1to180 - this.sourceTemperature) > 1) {
+            this.currentGasTemperatura1to180 += this.accelerationTemperature * Math.sign(this.sourceTemperature - this.currentGasTemperatura1to180) * this.scene.deltaTime/1000;
         }
-
-        this.desiredGasSpeed = 20 * this.currentGasTemperatura/180 + 1;
-        let hue = 180 - this.currentGasTemperatura; //0 to 180;
+        this.desiredGasSpeed = GasParticles.VELOCITY_MAX * Math.sqrt(this.currentGasTemperatura1to180/180);
+        this.desiredGasSpeed = Math.max(GasParticles.VELOCITY_MIN,this.desiredGasSpeed);
+        let hue = 180 - this.currentGasTemperatura1to180; //0 to 180;
         if (hue > 180) {
             hue = 180;
         }
@@ -162,7 +164,6 @@ export class GasParticles {
         }
         const saturation = Math.abs(hue - 90) / 90;
         const value = saturation / 2;
-        //console.log(hue, saturation, value);
         this.particleMaterial.emissiveColor = Color3.FromHSV(hue, saturation, value);
     }
     public setGasSourceTemperature(sourceTemperature: number) {
@@ -170,6 +171,6 @@ export class GasParticles {
     }
 
     public getGasCurrentTemperature(){
-        return this.currentGasTemperatura;
+        return this.currentGasTemperatura1to180;
     }
 }

@@ -48,8 +48,9 @@ export class Model implements IModel {
     private updateSceneModels() {
         this.scene.onBeforeRenderObservable.add(() => {
             const sourceType = this.sourceBlocks.getSourceType();
-            const gasTemperature = this.gasParticles.getGasCurrentTemperature();
-            this.carnotCylinder.updatePistonMove(sourceType, gasTemperature);
+            const sourceTypeIndex = this.sourceBlocks.getSourceTypeIndex();
+            const gasTemperature1to180 = this.gasParticles.getGasCurrentTemperature();
+            this.carnotCylinder.updatePistonMove(sourceType, sourceTypeIndex, gasTemperature1to180);
             const pistonY = this.carnotCylinder.getPistonY();
             this.gasParticles.updateGasParticleState(pistonY);
         });
@@ -73,18 +74,19 @@ export class Model implements IModel {
         this.onUpdateScoreCallback = callback;
     }
 
-    public changeSourceTypes() {
+    public changeSourceTypes() {      
         if(this.carnotCylinder.pistonIsWorking){
             this.sourceBlocks.changeSourceTypes();
             let sourceTemperature: number = 0;
-            if (this.sourceBlocks.getSourceType() == 0){
+            if (this.sourceBlocks.getSourceType() == 0 || this.sourceBlocks.getSourceTypeIndex() == 2){
                 sourceTemperature = 180;
                 this.gasParticles.setGasSourceTemperature(sourceTemperature);
             }
-            else if(this.sourceBlocks.getSourceType() == 2){
-                sourceTemperature = 0;
+            else if(this.sourceBlocks.getSourceType() == 2 || this.sourceBlocks.getSourceTypeIndex() == 0){
+                sourceTemperature = 1;
                 this.gasParticles.setGasSourceTemperature(sourceTemperature);
             }
+            console.log(this.sourceBlocks.getSourceType(),this.sourceBlocks.getSourceTypeIndex(),sourceTemperature);      
         }
         return this.sourceBlocks.getSourceType();
     }

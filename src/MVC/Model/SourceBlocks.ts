@@ -5,6 +5,7 @@ export class SourceBlocks {
     private sourceTypes: number[] = [1, 2, 1, 0];
     private sourceTypeIndex: number = 2;
     private sourceType: number = 1;
+
     private sourceBlockMaterial!: StandardMaterial;
     private gl!: GlowLayer;    
 
@@ -54,5 +55,8 @@ export class SourceBlocks {
     }
     public getSourceType(): number {
         return this.sourceType;
+    }
+    public getSourceTypeIndex(): number {
+        return this.sourceTypeIndex;
     }
 }
