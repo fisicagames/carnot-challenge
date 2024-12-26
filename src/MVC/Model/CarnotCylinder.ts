@@ -85,8 +85,15 @@ export class CarnotCylinder {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     console.log("if 06");
                 }
-                this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityAdiabatic, 0));
-                console.log("if 07: Expansão adiabática.");
+                else if(gasTemperature1to180 > 2){
+                    this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityAdiabatic, 0));
+                    console.log("if 07a: Expansão adiabática. ", gasTemperature1to180);
+                }
+                else{
+                    this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
+                    console.log("if 07b: Baixa pressão.");
+                }
+                
             }
             else if (sourceType === 1 && sourceTypeIndex == 2) {
                 if (this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN) {
@@ -99,7 +106,13 @@ export class CarnotCylinder {
                 }
             }
             else {
-                console.log("if 12: Compressão não adiabática")
+                if(this.piston.body.getLinearVelocity().y > 0){
+                    console.log("if 12a: Expansão não adiabática")
+                }
+                else{
+                    console.log("if 12b: Compressão não adiabática")
+                }
+                
             }
         }
         else {
