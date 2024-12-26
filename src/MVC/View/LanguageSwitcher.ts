@@ -8,7 +8,7 @@ export class LanguageSwitcher {
         this.languageOption = 0;
         this.strings = {
             ButtonLang: ["ENGLISH", "PORTUGUÊS"],
-            TextblockMeta: ["Objetivo: movimente o ímã para alterar o fluxo magnético e induzir corrente elétrica na bobina, iluminando a lâmpada com a máxima intensidade que conseguir!", "Goal: Move the magnet to alter the magnetic flux and induce an electric current in the coil, lighting the bulb as brightly as possible!"],
+            TextblockMeta: ["Objetivo: troque as fontes de calor no momento certo para maximizar o rendimento da máquina e se aproximar do valor máximo definido pelo rendimento de Carnot!", "Goal: Switch the heat sources at the right time to maximize the machine's efficiency and approach the maximum value defined by Carnot efficiency!"],
             TextblockTitle: ["Carnot Game", "Carnot Game"], 
             ButtonMenuStartA: ["Iniciar", "Start"],
             ButtonMenuStartB: ["Movimento Linear", "Linear Motion"],
