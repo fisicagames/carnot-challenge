@@ -177,9 +177,9 @@ export class View implements IView {
 
     public updateScoreText(newScore: number): void {
         if (this.languageSwitcher.languageOption == 0) {
-            this.textblockLevel.text = newScore + ` Volts. \n Tensão Máxima: ` + this.getScoreDisplay(this.topScore);
+            this.textblockLevel.text = `η(Ciclo): ${newScore}% \n η(Máximo): ___% \n η(Carnot): 30 %` + this.getScoreDisplay(this.topScore);
             //TODO: Remove next two lines for run only when endGame event. Send to show end game?
-            this.textblockTotalScore.text = `Tensão: ` + this.getScoreDisplay(newScore) + ` 🏆`;
+            this.textblockTotalScore.text = `η(Máximo): ` + this.getScoreDisplay(newScore) + ` 🏆`;
         }
         else {
             this.textblockLevel.text = newScore + ` Volts. \n Max. voltage: ` + this.getScoreDisplay(this.topScore);
