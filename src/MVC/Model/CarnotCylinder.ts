@@ -135,8 +135,8 @@ export class CarnotCylinder {
             }
             //console.log(gasTemperature1to180,pistonY,sourceTypeIndex);
             const normalizedX = this.normalize(pistonY, 2, 16, -10, 10); // pistonY mapeado para o eixo X
-            const gasTemperatureRatio = gasTemperature1to180 / pistonY;
-            const normalizedY = this.normalize(gasTemperatureRatio, 0.0625, 90, 15, 35); // gasTemperature/pistonY mapeado para o eixo Y
+            const pressure = gasTemperature1to180 / pistonY;
+            const normalizedY = this.normalize(pressure, 0.0625, 90, 15, 35); // gasTemperature/pistonY mapeado para o eixo Y
             
             this.lineDrawer.addPoint(new Vector3(normalizedX, normalizedY, -5));
         }

@@ -4,6 +4,7 @@ export class LineDrawer {
     private scene: Scene;
     private points: Vector3[] = [];
     private lineMesh: Mesh | null = null;
+    private maxPoints: number = 100; // Defina o limite de pontos na linha
 
     constructor(scene: Scene) {
         this.scene = scene;
@@ -16,6 +17,12 @@ export class LineDrawer {
      */
     public addPoint(point: Vector3): void {
         this.points.push(point);
+        
+        // Limitar o número de pontos para evitar que a linha cresça indefinidamente
+        if (this.points.length > this.maxPoints) {
+            this.points.shift(); // Remover o ponto mais antigo
+        }
+        
         this.updateLine();
     }
 
@@ -26,7 +33,7 @@ export class LineDrawer {
     private updateLine(): void {
         if (this.lineMesh) {
             // Atualiza os pontos da linha existente
-            this.lineMesh.dispose(); // Dispose da linha antiga
+            this.lineMesh.dispose(); // Dispose da linha antiga, não há uma atualização direta de pontos
         }
 
         // Cria uma nova linha com os pontos atualizados
