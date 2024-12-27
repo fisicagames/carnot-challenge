@@ -7,7 +7,8 @@ import { SourceBlocks } from "./SourceBlocks";
 import { GasParticles } from "./GasParticles";
 export class Model implements IModel {
     private scene: Scene;
-    public backgroundMusic?: SoundModel;
+    private backgroundMusic?: SoundModel;
+    private explosionSound?: SoundModel;
     private allSounds: SoundModel[] = [];
     private physicsPlugin: HavokPlugin | null;
     private endGameCallback: ((isVisible: boolean) => void) | null = null;
@@ -46,6 +47,19 @@ export class Model implements IModel {
         );
         this.backgroundMusic.setVolume(1.0);
         this.allSounds.push(this.backgroundMusic);
+
+        
+        //https://pixabay.com/sound-effects/nuclear-explosion-63470/
+        //Artistunfa (Freesound)
+        this.explosionSound = new SoundModel(
+            this.scene,
+            "explosionSound",
+            "./assets/sounds/nuclear-explosion-63470-compress.mp3",
+            false
+        );
+        this.explosionSound.setVolume(1.2);
+        this.explosionSound?.setLoop(false);
+        this.allSounds.push(this.backgroundMusic);
     }
 
     private updateSceneModels() {
@@ -80,6 +94,8 @@ export class Model implements IModel {
             let sourceTemperature: number = 0;
             if (this.sourceBlocks.getSourceType() == 0 || this.sourceBlocks.getSourceTypeIndex() == 2){
                 sourceTemperature = 180;
+                this.explosionSound?.play();
+
                 this.gasParticles.setGasSourceTemperature(sourceTemperature);
             }
             else if(this.sourceBlocks.getSourceType() == 2 || this.sourceBlocks.getSourceTypeIndex() == 0){
