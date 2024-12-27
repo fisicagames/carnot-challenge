@@ -12,24 +12,26 @@ export class CarnotCylinder {
     public pistonIsWorking: boolean = true;
     private static readonly VOLUME_MAX: number = 16;
     private static readonly VOLUME_MIN: number = 2;
-    private onCylinderFrozenCallback!: (() => void); 
+    private onCylinderFrozenCallback!: (() => void);
     private frameCount: number = 0;
     private realTimeGraph: RealTimeGraph;
-    public onUpdateScoreCallback?: ((score: number, state: string) => void); 
+    public onUpdateScoreCallback?: ((score: number, state: string) => void);
     private lastVolume: number = 2;
     private processName: string = "";
     private pointsAdd: number = 0;
-    private lastVolume: number = 2;
-    private processName: string = "";
-    private pointsAdd: number = 0;
+    private onPistonExplosionCallback!: (() => void);
+
+    public setPistonExplosionCallback(callback: () => void) {
+        this.onPistonExplosionCallback = callback;
+    }
 
     constructor(scene: Scene) {
         this.scene = scene;
         const meshPiston = this.scene.getMeshByName("Cylinder.001") as Mesh;
         meshPiston.position.y = 2;
         this.createCylinderWalls();
-        this.piston = this.createPiston();    
-        this.realTimeGraph = new RealTimeGraph(this.scene);   
+        this.piston = this.createPiston();
+        this.realTimeGraph = new RealTimeGraph(this.scene);
     }
 
     private createCylinderWalls() {
@@ -65,14 +67,12 @@ export class CarnotCylinder {
             if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                 this.processName = "Volume mínimo.";
-                this.processName = "Volume mínimo.";
-                if(sourceType == 2 && gasTemperature1to180 < 2){
+                if (sourceType == 2 && gasTemperature1to180 < 2) {
                     this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
                     const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
                     boxMaterial.emissiveColor = Color3.FromHexString("#0000FF");
                     this.pistonIsWorking = false;
-                    this.processName = "Máquina Congelada! \n Fim de jogo!";                    
-                    this.processName = "Máquina Congelada! \n Fim de jogo!";                    
+                    this.processName = "Máquina Congelada! \n Fim de jogo!";
                     this.onCylinderFrozenCallback();
                 }
             }
@@ -92,8 +92,8 @@ export class CarnotCylinder {
                 boxMaterial.emissiveColor = Color3.FromHexString("#530000");
 
                 this.pistonIsWorking = false;
-                this.processName = "Máquina fundida!. \n Fim de jogo!";                
-                this.processName = "Máquina fundida!. \n Fim de jogo!";                
+                this.processName = "Máquina fundida!. \n Fim de jogo!";
+                this.onPistonExplosionCallback();
             }
             else if (sourceType === 1 && pistonY >= CarnotCylinder.VOLUME_MAX) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
@@ -102,15 +102,13 @@ export class CarnotCylinder {
             }
             else if (sourceType === 0 && gasTemperature1to180 > 179) {
                 this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityIsothermal, 0));
-                this.processName = "Expansão Isotérmica.";                
-                this.processName = "Expansão Isotérmica.";                
+                this.processName = "Expansão Isotérmica.";
             }
             else if (sourceType === 2 && gasTemperature1to180 < 2) {
-                if(pistonY > CarnotCylinder.VOLUME_MIN){
+                if (pistonY > CarnotCylinder.VOLUME_MIN) {
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityIsothermal, 0));
                     this.processName = "Compressão Isotérmica.";
-                    this.processName = "Compressão Isotérmica.";
-                }                                
+                }
             }
             else if (sourceType === 1 && sourceTypeIndex == 0) {
                 if (pistonY >= CarnotCylinder.VOLUME_MAX) {
@@ -119,77 +117,58 @@ export class CarnotCylinder {
                     this.processName = "Volume máximo! \n Pistão emperrado!\n Fim de jogo!";
                     this.pistonIsWorking = false;
                 }
-                else if(gasTemperature1to180 > 2){
+                else if (gasTemperature1to180 > 2) {
                     this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityAdiabatic, 0));
                     this.processName = "Expansão Adiabática.";
-                    this.processName = "Expansão Adiabática.";
                 }
-                else{
+                else {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     //console.log("if 07b: Baixa pressão.");
                     this.processName = "Baixa pressão.";
-                    this.processName = "Baixa pressão.";
                 }
-                
+
             }
             else if (sourceType === 1 && sourceTypeIndex == 2) {
                 if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     this.processName = "Volume mínimo.";
-                    this.processName = "Volume mínimo.";
                 }
-                else if (gasTemperature1to180 < 179){
+                else if (gasTemperature1to180 < 179) {
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityAdiabatic, 0));
                     //console.log("if 09a: Compressão adiabática");
-                    this.processName = "Compressão Adiabática.";
                     this.processName = "Compressão Adiabática.";
                 }
                 else {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     //console.log("if 09b: Estado em Equilíbrio.");
                     this.processName = "Máquina parada.";
-                    this.processName = "Máquina parada.";
                 }
             }
             else {
-                if(this.piston.body.getLinearVelocity().y > 0){
-                    this.processName = "Expansão não Adiabática.";
+                if (this.piston.body.getLinearVelocity().y > 0) {
                     this.processName = "Expansão não Adiabática.";
                 }
-                else{
+                else {
                     this.processName = "Compressão não Adiabática.";
-                    this.processName = "Compressão não Adiabática.";
-                }                
+                }
             }
             this.frameCount++;
-   
+
             if (this.frameCount % 10 === 0) {
                 this.realTimeGraph.updateGraph(pistonY, gasTemperature1to180, 5);
                 const deltaVolume = pistonY - this.lastVolume
-                const pressure = (gasTemperature1to180+273) / (pistonY+5);
+                const pressure = (gasTemperature1to180 + 273) / (pistonY + 5);
                 const work = pressure * deltaVolume;
                 this.lastVolume = pistonY;
-                if(this.onUpdateScoreCallback){
-                    this.onUpdateScoreCallback(work,this.processName+`\n Trabalho: ${work.toFixed(1)} J`);
-                } 
-            } 
+                if (this.onUpdateScoreCallback) {
+                    this.onUpdateScoreCallback(work, this.processName + `\n Trabalho: ${work.toFixed(1)} J`);
+                }
+            }
         }
-        else{
-                const deltaVolume = pistonY - this.lastVolume
-                const pressure = (gasTemperature1to180+273) / (pistonY+5);
-                const work = pressure * deltaVolume;
-                this.lastVolume = pistonY;
-                if(this.onUpdateScoreCallback){
-                    this.onUpdateScoreCallback(work,this.processName+`\n Trabalho: ${work.toFixed(1)} J`);
-                } 
-            } 
-        }
-        else{
-            if(this.onUpdateScoreCallback){
-                this.onUpdateScoreCallback(0,this.processName);
-            } 
-                this.onUpdateScoreCallback(0,this.processName);
-            } 
+        else {
+            if (this.onUpdateScoreCallback) {
+                this.onUpdateScoreCallback(0, this.processName);
+            }
         }
     }
     public setCylinderFrozenCallback(callback: () => void) {

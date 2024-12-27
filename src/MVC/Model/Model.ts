@@ -31,7 +31,10 @@ export class Model implements IModel {
 
         this.updateSceneModels();
 
-        this.carnotCylinder.setCylinderFrozenCallback(()=>this.gasParticles.frozenGas())
+        this.carnotCylinder.setCylinderFrozenCallback(() => this.gasParticles.frozenGas())
+        this.carnotCylinder.setPistonExplosionCallback(() => {
+            this.explosionSound?.play();
+        })
 
     }
 
@@ -48,7 +51,7 @@ export class Model implements IModel {
         this.backgroundMusic.setVolume(1.0);
         this.allSounds.push(this.backgroundMusic);
 
-        
+
         //https://pixabay.com/sound-effects/nuclear-explosion-63470/
         //Artistunfa (Freesound)
         this.explosionSound = new SoundModel(
@@ -59,7 +62,7 @@ export class Model implements IModel {
         );
         this.explosionSound.setVolume(1.2);
         this.explosionSound?.setLoop(false);
-        this.allSounds.push(this.backgroundMusic);
+        this.allSounds.push(this.explosionSound);
     }
 
     private updateSceneModels() {
@@ -88,21 +91,19 @@ export class Model implements IModel {
         this.carnotCylinder.setUpdateScoreCallback(callback);
     }
 
-    public changeSourceTypes() {      
-        if(this.carnotCylinder.pistonIsWorking){
+    public changeSourceTypes() {
+        if (this.carnotCylinder.pistonIsWorking) {
             this.sourceBlocks.changeSourceTypes();
             let sourceTemperature: number = 0;
-            if (this.sourceBlocks.getSourceType() == 0 || this.sourceBlocks.getSourceTypeIndex() == 2){
+            if (this.sourceBlocks.getSourceType() == 0 || this.sourceBlocks.getSourceTypeIndex() == 2) {
                 sourceTemperature = 180;
-                this.explosionSound?.play();
-
                 this.gasParticles.setGasSourceTemperature(sourceTemperature);
             }
-            else if(this.sourceBlocks.getSourceType() == 2 || this.sourceBlocks.getSourceTypeIndex() == 0){
+            else if (this.sourceBlocks.getSourceType() == 2 || this.sourceBlocks.getSourceTypeIndex() == 0) {
                 sourceTemperature = 1;
                 this.gasParticles.setGasSourceTemperature(sourceTemperature);
-            }            
+            }
         }
         return this.sourceBlocks.getSourceType();
-    }    
+    }
 }
