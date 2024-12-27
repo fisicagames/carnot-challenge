@@ -16,8 +16,8 @@ export class CameraInitializer {
         const camera = new UniversalCamera("UniversalCamera", new Vector3(0, 21, -50), scene);
         //camera.setTarget(Vector3.Zero());
         camera.setTarget(new Vector3(0, 5.31, 7.84));
-        //TODO: [ ] Add or remove the attachControl bellow to control the camera with mouse:
-        if(canvas){
+        //TODO: [x] Add or remove the attachControl bellow to control the camera with mouse:
+        if(canvas && false){
             camera.attachControl(canvas, true);
         }
         return camera;
