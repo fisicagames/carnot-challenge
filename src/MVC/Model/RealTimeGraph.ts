@@ -7,7 +7,7 @@ export class RealTimeGraph{
 
     constructor(scene: Scene){
         this.scene = scene;
-        this.pointsChart = Array(1000).fill(new Vector3(-10, 25, 5));
+        this.pointsChart = Array(1000).fill(new Vector3(-9.99, 27.14, 5));
         this.linesMeshChart = MeshBuilder.CreateLines("lines", { points: this.pointsChart, updatable: true }, this.scene);
     }
 
