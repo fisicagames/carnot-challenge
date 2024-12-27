@@ -177,9 +177,9 @@ export class View implements IView {
 
     public updateScoreText(newScore: number, state: string): void {
         if (this.languageSwitcher.languageOption == 0) {
-            this.textblockLevel.text = `${state} \n Pontos: ${newScore}` ;
+            this.textblockLevel.text = `${state} \n Trabalho total: ${newScore.toFixed(0)} J` ;
             //TODO: Remove next two lines for run only when endGame event. Send to show end game?
-            this.textblockTotalScore.text = `η(Máximo): ` + this.getScoreDisplay(newScore) + ` 🏆`;
+            this.textblockTotalScore.text = this.getScoreDisplay(newScore);
         }
         else {
             this.textblockLevel.text = newScore + ` Volts. \n Max. voltage: ` + this.getScoreDisplay(this.topScore);
@@ -189,19 +189,19 @@ export class View implements IView {
         }
         if (this.topScore < newScore) {
             this.topScore = newScore;
-            this.textblockMenuBest.text = this.getScoreDisplay(newScore) + ` 🏆`;
+            this.textblockMenuBest.text = this.getScoreDisplay(newScore);
         }
     }
 
     private getScoreDisplay(score: number): string {
-        if (score < 24) {
-            return `${score} V`;
-        } else if (score < 60) {
-            return `${score} V 🥉`;
-        } else if (score < 110) {
-            return `${score} V 🥈`;
+        if (score < 600) {
+            return `${score.toFixed(0)} J`;
+        } else if (score < 1200) {
+            return `${score.toFixed(0)} J 🥉`;
+        } else if (score < 2400) {
+            return `${score.toFixed(0)} J 🥈`;
         } else {
-            return `${score} V 🥇`;
+            return `${score.toFixed(0)} J 🥇`;
         }
     }
 
