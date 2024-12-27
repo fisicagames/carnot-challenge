@@ -74,7 +74,8 @@ export class CarnotCylinder {
             if (sourceType !== 0 && pistonY >= CarnotCylinder.VOLUME_MAX &&
                 this.piston.body.getLinearVelocity().y !== 0) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                this.processName = "Volume máximo.";                
+                this.processName = "Volume máximo! \n Pistão emperrado!\n Fim de jogo!";
+                this.pistonIsWorking = false;
             }
             else if (sourceType === 0 && pistonY > CarnotCylinder.VOLUME_MAX && gasTemperature1to180 > 170) {
                 this.piston.body.setMassProperties({ mass: 1 });
@@ -90,7 +91,8 @@ export class CarnotCylinder {
             }
             else if (sourceType === 1 && pistonY >= CarnotCylinder.VOLUME_MAX) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                this.processName = "Volume máximo.";                
+                this.processName = "Volume máximo! \n Pistão emperrado!\n Fim de jogo!";
+                this.pistonIsWorking = false;
             }
             else if (sourceType === 0 && gasTemperature1to180 > 179) {
                 this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityIsothermal, 0));
@@ -106,7 +108,8 @@ export class CarnotCylinder {
                 if (pistonY >= CarnotCylinder.VOLUME_MAX) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     //console.log("if 06");
-                    this.processName = "Volume máximo.";
+                    this.processName = "Volume máximo! \n Pistão emperrado!\n Fim de jogo!";
+                    this.pistonIsWorking = false;
                 }
                 else if(gasTemperature1to180 > 2){
                     this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityAdiabatic, 0));
