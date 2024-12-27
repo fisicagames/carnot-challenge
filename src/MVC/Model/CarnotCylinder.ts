@@ -1,5 +1,5 @@
 import { Color3, LinesMesh, Mesh, MeshBuilder, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
-import { LineDrawer } from "./LineDrawer";
+import { RealTimeGraph } from "./RealTimeGraph";
 
 export class CarnotCylinder {
     private scene: Scene;
@@ -13,22 +13,14 @@ export class CarnotCylinder {
     private static readonly VOLUME_MAX: number = 16;
     private static readonly VOLUME_MIN: number = 2;
     private onCylinderFrozenCallback!: (() => void); 
-    private lineDrawer: LineDrawer;
-    private myPoints: Vector3[];
-    private lines: LinesMesh;
-   
+    private frameCount: number = 0;
+    private realTimeGraph: RealTimeGraph;
 
     constructor(scene: Scene) {
         this.scene = scene;
-        this.lineDrawer = new LineDrawer(scene);
         this.createCylinderWalls();
-        this.piston = this.createPiston();
-
-         // Inicializar array com 100 pontos na posição (0, 0, 0)
-    this.myPoints = Array(1000).fill(new Vector3(0, 0, 0));
-
-    // Criar linha atualizável
-    this.lines = MeshBuilder.CreateLines("lines", { points: this.myPoints, updatable: true });
+        this.piston = this.createPiston();    
+        this.realTimeGraph = new RealTimeGraph(this.scene);   
     }
 
     private createCylinderWalls() {
@@ -142,18 +134,15 @@ export class CarnotCylinder {
                 }                
             }
             //console.log(gasTemperature1to180,pistonY,sourceTypeIndex);
-            const normalizedX = this.normalize(pistonY, 2, 16, -10, 10); // pistonY mapeado para o eixo X
-            const pressure = gasTemperature1to180 / pistonY;
-            const normalizedY = this.normalize(pressure, 0.0625, 90, 15, 35); // gasTemperature/pistonY mapeado para o eixo Y
-            this.myPoints.shift();
-
-            // Adicionar um novo ponto aleatório ao final
-            this.myPoints.push(new Vector3(normalizedX, normalizedY, -5));
+            this.frameCount++;
     
-            // Atualizar a linha com os novos pontos
-            this.lines = MeshBuilder.CreateLines("lines", { points: this.myPoints, instance: this.lines });
-
-            //this.lineDrawer.addPoint(new Vector3(normalizedX, normalizedY, -5));
+            if (this.frameCount % 10 === 0) {
+                const normalizedX = this.normalize(pistonY, 2, 16, -10, 10);
+                const pressure = gasTemperature1to180 / pistonY;
+                const normalizedY = this.normalize(pressure, 0.0625, 90, 18, 30);
+                this.realTimeGraph.updateGraph(normalizedX, normalizedY, 5);
+                
+            }            
         }
     }
     public setCylinderFrozenCallback(callback: () => void) {
