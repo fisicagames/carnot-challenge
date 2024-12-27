@@ -20,3 +20,7 @@ https://playground.babylonjs.com/#2FPT1A#50
 # Havok Physics
 
 https://playground.babylonjs.com/#RQIZD3#14
+
+# Create lines
+
+https://playground.babylonjs.com/#MZ7QRG#3966

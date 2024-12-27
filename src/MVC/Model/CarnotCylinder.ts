@@ -1,4 +1,5 @@
 import { Color3, Mesh, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
+import { LineDrawer } from "./LineDrawer";
 
 export class CarnotCylinder {
     private scene: Scene;
@@ -12,9 +13,12 @@ export class CarnotCylinder {
     private static readonly VOLUME_MAX: number = 16;
     private static readonly VOLUME_MIN: number = 2;
     private onCylinderFrozenCallback!: (() => void); 
+    private lineDrawer: LineDrawer;
+   
 
     constructor(scene: Scene) {
         this.scene = scene;
+        this.lineDrawer = new LineDrawer(scene);
         this.createCylinderWalls();
         this.piston = this.createPiston();
     }
@@ -48,24 +52,25 @@ export class CarnotCylinder {
     public updatePistonMove(sourceType: number, sourceTypeIndex: number, gasTemperature1to180: number) {
         //piston move:
         if (this.pistonIsWorking) {
-            if (this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN) {
+            const pistonY = this.piston.body.transformNode.position.y;
+            if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                console.log("if 01a: Volume mínimo.");
+                //console.log("if 01a: Volume mínimo.");
                 if(sourceType == 2 && gasTemperature1to180 < 2){
                     this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
                     const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
                     boxMaterial.emissiveColor = Color3.FromHexString("#0000FF");
                     this.pistonIsWorking = false;
-                    console.log("if 02: Sistema Congelado!");
+                    //console.log("if 02: Máquina Congelada!");
                     this.onCylinderFrozenCallback();
                 }
             }
-            if (sourceType !== 0 && this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX &&
+            if (sourceType !== 0 && pistonY >= CarnotCylinder.VOLUME_MAX &&
                 this.piston.body.getLinearVelocity().y !== 0) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                console.log("if 01b: Volume máximo.");
+                //console.log("if 01b: Volume máximo.");
             }
-            else if (sourceType === 0 && this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MAX && gasTemperature1to180 > 170) {
+            else if (sourceType === 0 && pistonY > CarnotCylinder.VOLUME_MAX && gasTemperature1to180 > 170) {
                 this.piston.body.setMassProperties({ mass: 1 });
                 this.cylinder_aggregate0.body.setMassProperties({ mass: 1 });
                 this.cylinder_aggregate1.body.setMassProperties({ mass: 1 });
@@ -75,62 +80,72 @@ export class CarnotCylinder {
                 boxMaterial.emissiveColor = Color3.FromHexString("#530000");
 
                 this.pistonIsWorking = false;
-                console.log("if 02: Máquina Fundida!");
+                //console.log("if 02: Máquina Fundida!");
             }
-            else if (sourceType === 1 && this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX) {
+            else if (sourceType === 1 && pistonY >= CarnotCylinder.VOLUME_MAX) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                console.log("if 03: Volume máximo.");
+                //console.log("if 03: Volume máximo.");
             }
             else if (sourceType === 0 && gasTemperature1to180 > 179) {
                 this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityIsothermal, 0));
-                console.log("if 04: Expansão Isotérmica.");
+                //console.log("if 04: Expansão Isotérmica.");
             }
             else if (sourceType === 2 && gasTemperature1to180 < 2) {
-                if(this.piston.body.transformNode.position.y > CarnotCylinder.VOLUME_MIN){
+                if(pistonY > CarnotCylinder.VOLUME_MIN){
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityIsothermal, 0));
-                    console.log("if 05: Compressão isotérmica.");
+                    //console.log("if 05: Compressão isotérmica.");
                 }                                
             }
             else if (sourceType === 1 && sourceTypeIndex == 0) {
-                if (this.piston.body.transformNode.position.y >= CarnotCylinder.VOLUME_MAX) {
+                if (pistonY >= CarnotCylinder.VOLUME_MAX) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                    console.log("if 06");
+                    //console.log("if 06");
                 }
                 else if(gasTemperature1to180 > 2){
                     this.piston.body.setLinearVelocity(new Vector3(0, this.pistonYVelocityAdiabatic, 0));
-                    console.log("if 07a: Expansão adiabática.");
+                    //console.log("if 07a: Expansão adiabática.");
                 }
                 else{
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                    console.log("if 07b: Baixa pressão.");
+                    //console.log("if 07b: Baixa pressão.");
                 }
                 
             }
             else if (sourceType === 1 && sourceTypeIndex == 2) {
-                if (this.piston.body.transformNode.position.y <= CarnotCylinder.VOLUME_MIN) {
+                if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                    console.log("if 08: Volume mínimo.");
+                    //console.log("if 08: Volume mínimo.");
                 }
                 else if (gasTemperature1to180 < 179){
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityAdiabatic, 0));
-                    console.log("if 09a: Compressão adiabática");
+                    //console.log("if 09a: Compressão adiabática");
                 }
                 else {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                    console.log("if 09b: Alta pressão.");
+                    //console.log("if 09b: Estado em Equilíbrio.");
                 }
             }
             else {
                 if(this.piston.body.getLinearVelocity().y > 0){
-                    console.log("if 12a: Expansão não adiabática")
+                    //console.log("if 12a: Expansão não adiabática")
                 }
                 else{
-                    console.log("if 12b: Compressão não adiabática")
+                    //console.log("if 12b: Compressão não adiabática")
                 }                
             }
+            //console.log(gasTemperature1to180,pistonY,sourceTypeIndex);
+            const normalizedX = this.normalize(pistonY, 2, 16, -10, 10); // pistonY mapeado para o eixo X
+            const gasTemperatureRatio = gasTemperature1to180 / pistonY;
+            const normalizedY = this.normalize(gasTemperatureRatio, 0.0625, 90, 15, 35); // gasTemperature/pistonY mapeado para o eixo Y
+            
+            this.lineDrawer.addPoint(new Vector3(normalizedX, normalizedY, -5));
         }
     }
     public setCylinderFrozenCallback(callback: () => void) {
         this.onCylinderFrozenCallback = callback;
+    }
+
+    private normalize(value: number, minInput: number, maxInput: number, minOutput: number, maxOutput: number): number {
+        return minOutput + (value - minInput) * (maxOutput - minOutput) / (maxInput - minInput);
     }
 }
