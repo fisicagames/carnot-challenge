@@ -11,6 +11,7 @@ export class Controller {
     private followCamera: FollowCamera;
     private followCameraTarget: Mesh | null = null;
     private inputKeyboardControllers: InputKeyboardController;
+    private score: number = 0;
 
 
     private isUpPressed: boolean = false;
@@ -25,8 +26,9 @@ export class Controller {
         
         this.followCamera = this.scene.activeCamera as FollowCamera;
 
-        this.model.setScoreUpdateCallback((newScore) => {
-            this.view.updateScoreText(newScore);
+        this.model.setScoreUpdateCallback((newScore: number, state: string) => {
+            this.score += newScore;
+            this.view.updateScoreText(this.score, state)
         });
 
         this.model.setEndGameCallback((isVisible: boolean) => this.showEndGamePanel(isVisible));
@@ -109,7 +111,7 @@ export class Controller {
     private continueGame(){
         this.view.updateMainMenuVisibility(false);        
         this.view.showEndGamePanel(false);
-        this.view.updateScoreText(0);        
+        this.view.updateScoreText(0, "");        
     }
 
     private showMenu(): void {

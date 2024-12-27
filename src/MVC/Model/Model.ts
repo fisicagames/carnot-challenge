@@ -70,11 +70,8 @@ export class Model implements IModel {
         this.endGameCallback = callback;
     }
 
-    private onUpdateScoreCallback: (newScore: number) => void = () => {
-        console.warn("No callback registered for score updates.");
-    };
-    public setScoreUpdateCallback(callback: (newScore: number) => void): void {
-        this.onUpdateScoreCallback = callback;
+    public setScoreUpdateCallback(callback: (newScore: number, state: string) => void): void {
+        this.carnotCylinder.setUpdateScoreCallback(callback);
     }
 
     public changeSourceTypes() {      

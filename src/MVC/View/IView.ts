@@ -25,7 +25,7 @@ export interface IView {
     updateMainMenuVisibility(isVisible: boolean): void;
     changeLanguage(): void;
 
-    updateScoreText(newScore: number): void;
+    updateScoreText(newScore: number, state: string): void;
 
     showEndGamePanel(isVisible: boolean): void;
 
