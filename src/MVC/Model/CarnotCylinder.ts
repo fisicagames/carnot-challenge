@@ -1,4 +1,4 @@
-import { Color3, Mesh, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
+import { Color3, LinesMesh, Mesh, MeshBuilder, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
 import { LineDrawer } from "./LineDrawer";
 
 export class CarnotCylinder {
@@ -14,6 +14,8 @@ export class CarnotCylinder {
     private static readonly VOLUME_MIN: number = 2;
     private onCylinderFrozenCallback!: (() => void); 
     private lineDrawer: LineDrawer;
+    private myPoints: Vector3[];
+    private lines: LinesMesh;
    
 
     constructor(scene: Scene) {
@@ -21,6 +23,12 @@ export class CarnotCylinder {
         this.lineDrawer = new LineDrawer(scene);
         this.createCylinderWalls();
         this.piston = this.createPiston();
+
+         // Inicializar array com 100 pontos na posição (0, 0, 0)
+    this.myPoints = Array(1000).fill(new Vector3(0, 0, 0));
+
+    // Criar linha atualizável
+    this.lines = MeshBuilder.CreateLines("lines", { points: this.myPoints, updatable: true });
     }
 
     private createCylinderWalls() {
@@ -137,8 +145,15 @@ export class CarnotCylinder {
             const normalizedX = this.normalize(pistonY, 2, 16, -10, 10); // pistonY mapeado para o eixo X
             const pressure = gasTemperature1to180 / pistonY;
             const normalizedY = this.normalize(pressure, 0.0625, 90, 15, 35); // gasTemperature/pistonY mapeado para o eixo Y
-            
-            this.lineDrawer.addPoint(new Vector3(normalizedX, normalizedY, -5));
+            this.myPoints.shift();
+
+            // Adicionar um novo ponto aleatório ao final
+            this.myPoints.push(new Vector3(normalizedX, normalizedY, -5));
+    
+            // Atualizar a linha com os novos pontos
+            this.lines = MeshBuilder.CreateLines("lines", { points: this.myPoints, instance: this.lines });
+
+            //this.lineDrawer.addPoint(new Vector3(normalizedX, normalizedY, -5));
         }
     }
     public setCylinderFrozenCallback(callback: () => void) {
