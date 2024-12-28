@@ -28,7 +28,9 @@ export class Controller {
         this.followCamera = this.scene.activeCamera as FollowCamera;
 
         this.model.setScoreUpdateCallback((newScore: number, state: string) => {
-            this.score += newScore;
+            if(Math.abs(newScore) < 50){
+                this.score += newScore;            
+            }                        
             this.view.updateScoreText(this.score, state)
         });
 
@@ -82,7 +84,7 @@ export class Controller {
                 const sourceType = Number(this.model.changeSourceTypes()).toString();
                 this.view.changeButtonUPSymbol(sourceType, this.coins);
                 if(this.coins == 8){
-                    this.model.activePiston();
+                    this.score = 0;
                 }
             }
         });
@@ -112,6 +114,7 @@ export class Controller {
         this.view.changeButtonUPSymbol("1", this.coins);
         this.model.resetGame();
         this.continueGame();
+        this.score = 0;
     }
     private startGameLinear(): void {
         this.continueGame();

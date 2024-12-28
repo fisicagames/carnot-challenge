@@ -24,4 +24,8 @@ export class RealTimeGraph{
         return minOutput + (value - minInput) * (maxOutput - minOutput) / (maxInput - minInput);
     }
 
+    public resetData(){
+        this.pointsChart = Array(200).fill(new Vector3(-9.99, 27.14, 5));
+    }
+
 }

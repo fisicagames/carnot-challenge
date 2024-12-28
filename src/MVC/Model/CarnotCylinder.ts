@@ -215,6 +215,7 @@ export class CarnotCylinder {
     public resetCylinder() {
         const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
         boxMaterial.emissiveColor = this.boxInitialColor;
+        this.realTimeGraph.resetData();
 
         this.cylinder_aggregate0.body.transformNode.getChildMeshes().forEach(mesh => {mesh.dispose()});
         this.cylinder_aggregate0.body.transformNode.dispose();
