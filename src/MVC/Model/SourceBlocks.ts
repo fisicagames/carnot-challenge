@@ -59,4 +59,8 @@ export class SourceBlocks {
     public getSourceTypeIndex(): number {
         return this.sourceTypeIndex;
     }
+    public resetSource(){
+        this.sourceTypeIndex = 1;
+        this.changeSourceTypes();
+    }
 }

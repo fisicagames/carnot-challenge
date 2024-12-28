@@ -20,6 +20,7 @@ export class CarnotCylinder {
     private processName: string = "";
     private pointsAdd: number = 0;
     private onPistonExplosionCallback!: (() => void);
+    private boxInitialColor: Color3;
 
     public setPistonExplosionCallback(callback: () => void) {
         this.onPistonExplosionCallback = callback;
@@ -27,6 +28,8 @@ export class CarnotCylinder {
 
     constructor(scene: Scene) {
         this.scene = scene;
+        const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
+        this.boxInitialColor = boxMaterial.emissiveColor;
         const meshPiston = this.scene.getMeshByName("Cylinder.001") as Mesh;
         meshPiston.position.y = 2;
         this.createCylinderWalls();
@@ -178,6 +181,8 @@ export class CarnotCylinder {
     }
 
     public resetCylinder() {
+        const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
+        boxMaterial.emissiveColor = this.boxInitialColor;
 
         //this.cylinder_aggregate1 = this.createPhysics("Cylinder_primitive1");
         this.cylinder_aggregate0.body.disablePreStep = false
@@ -185,6 +190,7 @@ export class CarnotCylinder {
         const cMesh0 = this.scene.getMeshByName("Cylinder_primitive0") as Mesh;
         cMesh0.position = new Vector3(0, 0, 0);
         cMesh0.rotation = new Vector3(0, 0, 0);
+        this.cylinder_aggregate0.body.setMassProperties({ mass: 0 });
         this.cylinder_aggregate0.body.setAngularVelocity(Vector3.Zero());
         this.cylinder_aggregate0.body.setLinearVelocity(Vector3.Zero());
 
@@ -193,6 +199,7 @@ export class CarnotCylinder {
         const cMesh1 = this.scene.getMeshByName("Cylinder_primitive1") as Mesh;
         cMesh1.position = new Vector3(0, 0, 0);
         cMesh0.rotation = new Vector3(0, 0, 0);
+        this.cylinder_aggregate1.body.setMassProperties({ mass: 0 });
         this.cylinder_aggregate1.body.setAngularVelocity(Vector3.Zero());
         this.cylinder_aggregate1.body.setLinearVelocity(Vector3.Zero());
 
@@ -202,24 +209,28 @@ export class CarnotCylinder {
             this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
             this.cylinder_aggregate1.body.disablePreStep = true;
             this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
-
-
-            console.log("Reset Cylinders");
-
         })
     }
     public resetPiston() {
         this.piston.body.disablePreStep = false
-        this.piston.body.setMotionType(PhysicsMotionType.ANIMATED);
-        this.piston.body.transformNode.position = new Vector3(0, 2, 0);
-        this.piston.body.transformNode.rotation = new Vector3(0, 0, Math.PI);
         this.piston.body.setAngularVelocity(Vector3.Zero());
         this.piston.body.setLinearVelocity(Vector3.Zero());
-
+        this.piston.body.setMotionType(PhysicsMotionType.ANIMATED);        
+        this.piston.body.setMassProperties({ mass: 0 });
+        this.piston.body.transformNode.position = new Vector3(0, 2, 0);
+        this.piston.body.transformNode.rotation = new Vector3(0, Math.PI, Math.PI);
+        this.piston.body.setAngularVelocity(Vector3.Zero());
+        this.piston.body.setLinearVelocity(Vector3.Zero());
+        
+    }
+    public activePiston(){
         this.scene.onBeforeRenderObservable.addOnce(() => {
-            this.piston.body.setMotionType(PhysicsMotionType.DYNAMIC);
             this.piston.body.disablePreStep = true;
-            console.log("Reset Piston");
+            this.piston.body.transformNode.rotation = new Vector3(0, Math.PI, Math.PI);
+            this.piston.body.setMotionType(PhysicsMotionType.DYNAMIC);
+            this.piston.body.setAngularVelocity(Vector3.Zero());
+            this.piston.body.setLinearVelocity(Vector3.Zero());
+            
         })
     }
 }

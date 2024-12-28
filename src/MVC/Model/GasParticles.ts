@@ -141,7 +141,7 @@ export class GasParticles {
                 const velocity = particle.physicsBody?.getLinearVelocity();
                 if (velocity) {
                     const speed = velocity.length();
-                    if(this.frozenState){
+                    if (this.frozenState) {
                         this.desiredGasSpeed = 0.2;
                     }
                     if (Math.abs(speed - this.desiredGasSpeed) > this.desiredGasSpeed / 10) {
@@ -149,19 +149,19 @@ export class GasParticles {
                         const correctedVelocity = velocity.scale(correctionFactor);
                         particle.physicsBody?.setLinearVelocity(correctedVelocity);
                     }
-                }                
+                }
             }
         });
     }
     private updateCurrentGasTemperature() {
         if (Math.abs(this.currentGasTemperatura1to180 - this.sourceTemperature) > 1) {
-            this.currentGasTemperatura1to180 += this.accelerationTemperature * Math.sign(this.sourceTemperature - this.currentGasTemperatura1to180) * this.scene.deltaTime/1000;
+            this.currentGasTemperatura1to180 += this.accelerationTemperature * Math.sign(this.sourceTemperature - this.currentGasTemperatura1to180) * this.scene.deltaTime / 1000;
         }
-        this.desiredGasSpeed = GasParticles.VELOCITY_MAX * Math.sqrt(this.currentGasTemperatura1to180/180);
-        this.desiredGasSpeed = Math.max(GasParticles.VELOCITY_MIN,this.desiredGasSpeed);
+        this.desiredGasSpeed = GasParticles.VELOCITY_MAX * Math.sqrt(this.currentGasTemperatura1to180 / 180);
+        this.desiredGasSpeed = Math.max(GasParticles.VELOCITY_MIN, this.desiredGasSpeed);
 
         let hue = 180 - this.currentGasTemperatura1to180; //0 to 180;
-        
+
         if (hue > 180) {
             hue = 180;
         }
@@ -177,10 +177,24 @@ export class GasParticles {
         this.sourceTemperature = sourceTemperature;
     }
 
-    public getGasCurrentTemperature(){
+    public getGasCurrentTemperature() {
         return this.currentGasTemperatura1to180;
     }
-    public frozenGas(){
-        this.frozenState = true;        
+    public frozenGas() {
+        this.frozenState = true;
+    }
+    public resetGasParticles(pistonY: number) {
+        this.particles.forEach((particle) => {
+            particle.physicsBody?.dispose();
+            particle.dispose();
+        });
+        this.particles = [];
+
+        this.currentGasTemperatura1to180 = 180;
+        this.sourceTemperature = 180;
+        this.desiredGasSpeed = 20 * this.sourceTemperature / 180;
+        this.frozenState = false;
+
+        this.createGasParticles(this.n, pistonY);
     }
 }

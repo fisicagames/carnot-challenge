@@ -57,7 +57,7 @@ export class Model implements IModel {
         this.explosionSound = new SoundModel(
             this.scene,
             "explosionSound",
-            "./assets/sounds/nuclear-explosion-63470-compress.mp3",
+            "./assets/sounds/nuclear-explosion-63470-compress-cut.mp3",
             false
         );
         this.explosionSound.setVolume(1.2);
@@ -107,7 +107,14 @@ export class Model implements IModel {
         return this.sourceBlocks.getSourceType();
     }
     public resetGame(){
+        this.carnotCylinder.pistonIsWorking = true;
+        this.sourceBlocks.resetSource();
         this.carnotCylinder.resetCylinder();
         this.carnotCylinder.resetPiston();
+        this.gasParticles.resetGasParticles(this.carnotCylinder.getPistonY());
+    }
+    public activePiston(): void{
+        this.carnotCylinder.activePiston();
+        console.log("Active Piston");
     }
 }

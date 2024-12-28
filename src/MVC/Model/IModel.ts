@@ -4,4 +4,5 @@ export interface IModel {
     setEndGameCallback(callback: (isVisible: boolean) => void): void;  
     changeSourceTypes(): void;  
     resetGame(): void;
+    activePiston(): void;
 }

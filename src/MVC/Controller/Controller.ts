@@ -81,6 +81,10 @@ export class Controller {
                 --this.coins;
                 const sourceType = Number(this.model.changeSourceTypes()).toString();
                 this.view.changeButtonUPSymbol(sourceType, this.coins);
+                console.log("this.coins ", this.coins)
+                if(this.coins == 8){
+                    this.model.activePiston();
+                }
             }
         });
         //this.view.onButtonUpUp(() => { });
@@ -105,6 +109,7 @@ export class Controller {
 
     private startGame(): void {
         //TODO: Mudar para view:
+        this.coins = 9;
         this.view.changeButtonUPSymbol("1", this.coins);
         this.model.resetGame();
         this.continueGame();
