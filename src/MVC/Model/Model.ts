@@ -106,4 +106,8 @@ export class Model implements IModel {
         }
         return this.sourceBlocks.getSourceType();
     }
+    public resetGame(){
+        this.carnotCylinder.resetCylinder();
+        this.carnotCylinder.resetPiston();
+    }
 }

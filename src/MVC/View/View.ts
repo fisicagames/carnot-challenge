@@ -189,16 +189,18 @@ export class View implements IView {
         }
         if (this.topScore < newScore) {
             this.topScore = newScore;
-            this.textblockMenuBest.text = this.getScoreDisplay(newScore);
+            if(this.topScore > 3){
+                this.textblockMenuBest.text = this.getScoreDisplay(newScore);
+            }
         }
     }
 
     private getScoreDisplay(score: number): string {
-        if (score < 600) {
+        if (score < 500) {
             return `${score.toFixed(0)} J`;
-        } else if (score < 1200) {
+        } else if (score < 600) {
             return `${score.toFixed(0)} J 🥉`;
-        } else if (score < 2400) {
+        } else if (score < 700) {
             return `${score.toFixed(0)} J 🥈`;
         } else {
             return `${score.toFixed(0)} J 🥇`;

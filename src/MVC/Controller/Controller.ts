@@ -53,11 +53,11 @@ export class Controller {
     private handleKeyPress(eventType: KeyboardEventTypes, key: string) {
         if (eventType === KeyboardEventTypes.KEYDOWN) {
             if (key === "w" || key === "arrowup") {
-                console.log(`Key ${key} pressed down`);
+                //console.log(`Key ${key} pressed down`);
             }
         } else if (eventType === KeyboardEventTypes.KEYUP) {
             if (key === "w" || key === "arrowup") {
-                console.log(`Key ${key} released`);
+                //console.log(`Key ${key} released`);
             }
         }
     }
@@ -106,6 +106,7 @@ export class Controller {
     private startGame(): void {
         //TODO: Mudar para view:
         this.view.changeButtonUPSymbol("1", this.coins);
+        this.model.resetGame();
         this.continueGame();
     }
     private startGameLinear(): void {

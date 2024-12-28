@@ -35,7 +35,6 @@ export class CarnotCylinder {
     }
 
     private createCylinderWalls() {
-
         this.cylinder_aggregate0 = this.createPhysics("Cylinder_primitive0");
         this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
         this.cylinder_aggregate1 = this.createPhysics("Cylinder_primitive1");
@@ -176,5 +175,51 @@ export class CarnotCylinder {
     }
     public setUpdateScoreCallback(callback: (newScore: number, state: string) => void) {
         this.onUpdateScoreCallback = callback;
+    }
+
+    public resetCylinder() {
+
+        //this.cylinder_aggregate1 = this.createPhysics("Cylinder_primitive1");
+        this.cylinder_aggregate0.body.disablePreStep = false
+        this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.ANIMATED);
+        const cMesh0 = this.scene.getMeshByName("Cylinder_primitive0") as Mesh;
+        cMesh0.position = new Vector3(0, 0, 0);
+        cMesh0.rotation = new Vector3(0, 0, 0);
+        this.cylinder_aggregate0.body.setAngularVelocity(Vector3.Zero());
+        this.cylinder_aggregate0.body.setLinearVelocity(Vector3.Zero());
+
+        this.cylinder_aggregate1.body.disablePreStep = false
+        this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.ANIMATED);
+        const cMesh1 = this.scene.getMeshByName("Cylinder_primitive1") as Mesh;
+        cMesh1.position = new Vector3(0, 0, 0);
+        cMesh0.rotation = new Vector3(0, 0, 0);
+        this.cylinder_aggregate1.body.setAngularVelocity(Vector3.Zero());
+        this.cylinder_aggregate1.body.setLinearVelocity(Vector3.Zero());
+
+
+        this.scene.onBeforeRenderObservable.addOnce(() => {
+            this.cylinder_aggregate0.body.disablePreStep = true;
+            this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
+            this.cylinder_aggregate1.body.disablePreStep = true;
+            this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
+
+
+            console.log("Reset Cylinders");
+
+        })
+    }
+    public resetPiston() {
+        this.piston.body.disablePreStep = false
+        this.piston.body.setMotionType(PhysicsMotionType.ANIMATED);
+        this.piston.body.transformNode.position = new Vector3(0, 2, 0);
+        this.piston.body.transformNode.rotation = new Vector3(0, 0, Math.PI);
+        this.piston.body.setAngularVelocity(Vector3.Zero());
+        this.piston.body.setLinearVelocity(Vector3.Zero());
+
+        this.scene.onBeforeRenderObservable.addOnce(() => {
+            this.piston.body.setMotionType(PhysicsMotionType.DYNAMIC);
+            this.piston.body.disablePreStep = true;
+            console.log("Reset Piston");
+        })
     }
 }
