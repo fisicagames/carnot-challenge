@@ -117,6 +117,5 @@ export class Model implements IModel {
     }
     public activePiston(): void {
         this.carnotCylinder.activePiston();
-        console.log("Active Piston");
     }
 }

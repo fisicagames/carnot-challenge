@@ -81,7 +81,6 @@ export class Controller {
                 --this.coins;
                 const sourceType = Number(this.model.changeSourceTypes()).toString();
                 this.view.changeButtonUPSymbol(sourceType, this.coins);
-                console.log("this.coins ", this.coins)
                 if(this.coins == 8){
                     this.model.activePiston();
                 }

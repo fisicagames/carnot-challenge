@@ -1,4 +1,4 @@
-import { Color3, LinesMesh, Mesh, MeshBuilder, Nullable, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Quaternion, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
+import { Color3, LinesMesh, Mesh, MeshBuilder, Nullable, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Quaternion, Scene, StandardMaterial, TransformNode, Vector3 } from "@babylonjs/core";
 import { RealTimeGraph } from "./RealTimeGraph";
 
 export class CarnotCylinder {
@@ -52,10 +52,25 @@ export class CarnotCylinder {
     }
 
     private createCylinderWalls() {
-        this.cylinder_aggregate0 = this.createPhysicsCylinder("Cylinder_primitive0");
+        const cylinder_aggregate0_Mesh = this.scene.getMeshByName("Cylinder_primitive0")  as Mesh;
+        cylinder_aggregate0_Mesh.isVisible = false;
+        const mesh0 = cylinder_aggregate0_Mesh.clone("clone0");
+        mesh0.isVisible = true;
+        const shape = new PhysicsShapeMesh(mesh0, this.scene);
+        shape.material = { friction: 0.0, restitution: 1.0 };
+        this.cylinder_aggregate0 = new PhysicsAggregate(mesh0, shape, { mass: 0 }, this.scene);
         this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
-        this.cylinder_aggregate1 = this.createPhysicsCylinder("Cylinder_primitive1");
+        
+        const cylinder_aggregate1_Mesh = this.scene.getMeshByName("Cylinder_primitive1")  as Mesh;
+
+        cylinder_aggregate1_Mesh.isVisible = false;
+        const mesh1 = cylinder_aggregate1_Mesh.clone("clone1");
+        mesh1.isVisible = true;
+        const shape1 = new PhysicsShapeMesh(mesh1, this.scene);
+        shape.material = { friction: 0.0, restitution: 1.0 };
+        this.cylinder_aggregate1 = new PhysicsAggregate(mesh1, shape1, { mass: 0 }, this.scene);
         this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
+
     }
 
     private createPiston() {
@@ -70,12 +85,6 @@ export class CarnotCylinder {
         meshOriginal.isVisible = false;
         const mesh = meshOriginal.clone("clone");
         mesh.isVisible = true;
-        const shape = new PhysicsShapeMesh(mesh, this.scene);
-        shape.material = { friction: 0.0, restitution: 1.0 };
-        return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
-    }
-    private createPhysicsCylinder(meshName: string): PhysicsAggregate {
-        const mesh = this.scene.getMeshByName(meshName) as Mesh;
         const shape = new PhysicsShapeMesh(mesh, this.scene);
         shape.material = { friction: 0.0, restitution: 1.0 };
         return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
@@ -207,32 +216,17 @@ export class CarnotCylinder {
         const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
         boxMaterial.emissiveColor = this.boxInitialColor;
 
-        //this.cylinder_aggregate1 = this.createPhysics("Cylinder_primitive1");
-        this.cylinder_aggregate0.body.disablePreStep = false
-        this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.ANIMATED);
-        const cMesh0 = this.scene.getMeshByName("Cylinder_primitive0") as Mesh;
-        cMesh0.position = new Vector3(0, 0, 0);
-        cMesh0.rotation = new Vector3(0, 0, 0);
-        this.cylinder_aggregate0.body.setMassProperties({ mass: 0 });
-        this.cylinder_aggregate0.body.setAngularVelocity(Vector3.Zero());
-        this.cylinder_aggregate0.body.setLinearVelocity(Vector3.Zero());
+        this.cylinder_aggregate0.body.transformNode.getChildMeshes().forEach(mesh => {mesh.dispose()});
+        this.cylinder_aggregate0.body.transformNode.dispose();
+        this.cylinder_aggregate0.shape.dispose();
+        this.cylinder_aggregate0.dispose();
 
-        this.cylinder_aggregate1.body.disablePreStep = false
-        this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.ANIMATED);
-        const cMesh1 = this.scene.getMeshByName("Cylinder_primitive1") as Mesh;
-        cMesh1.position = new Vector3(0, 0, 0);
-        cMesh0.rotation = new Vector3(0, 0, 0);
-        this.cylinder_aggregate1.body.setMassProperties({ mass: 0 });
-        this.cylinder_aggregate1.body.setAngularVelocity(Vector3.Zero());
-        this.cylinder_aggregate1.body.setLinearVelocity(Vector3.Zero());
+        this.cylinder_aggregate1.body.transformNode.getChildMeshes().forEach(mesh => {mesh.dispose()});
+        this.cylinder_aggregate1.body.transformNode.dispose();
+        this.cylinder_aggregate1.shape.dispose();
+        this.cylinder_aggregate1.dispose();
 
-
-        this.scene.onBeforeRenderObservable.addOnce(() => {
-            this.cylinder_aggregate0.body.disablePreStep = true;
-            this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
-            this.cylinder_aggregate1.body.disablePreStep = true;
-            this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
-        })
+        this.createCylinderWalls();
     }
     public resetPiston() {
 
