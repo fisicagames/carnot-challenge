@@ -1,4 +1,4 @@
-import { Color3, LinesMesh, Mesh, MeshBuilder, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
+import { Color3, LinesMesh, Mesh, MeshBuilder, Nullable, PhysicsAggregate, PhysicsMaterial, PhysicsMotionType, PhysicsShapeMesh, Quaternion, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
 import { RealTimeGraph } from "./RealTimeGraph";
 
 export class CarnotCylinder {
@@ -21,6 +21,8 @@ export class CarnotCylinder {
     private pointsAdd: number = 0;
     private onPistonExplosionCallback!: (() => void);
     private boxInitialColor: Color3;
+    private originalMeshPositions: Vector3[] = [];
+    private originalMeshRotations: Nullable<Quaternion>[]= [];
 
     public setPistonExplosionCallback(callback: () => void) {
         this.onPistonExplosionCallback = callback;
@@ -35,12 +37,24 @@ export class CarnotCylinder {
         this.createCylinderWalls();
         this.piston = this.createPiston();
         this.realTimeGraph = new RealTimeGraph(this.scene);
+        const pistonMesh = this.scene.getMeshByName("Cylinder.001");
+        const cylinder01Mesh0 = this.scene.getMeshByName("Cylinder_primitive0");
+        const cylinder01Mesh1 = this.scene.getMeshByName("Cylinder_primitive1");
+        if (pistonMesh&& cylinder01Mesh0 && cylinder01Mesh1){
+            this.originalMeshPositions.push(pistonMesh.position);
+            this.originalMeshPositions.push(cylinder01Mesh0.position);
+            this.originalMeshPositions.push(cylinder01Mesh1.position);
+            this.originalMeshRotations.push(pistonMesh.rotationQuaternion);
+            this.originalMeshRotations.push(cylinder01Mesh0.rotationQuaternion);
+            this.originalMeshRotations.push(cylinder01Mesh1.rotationQuaternion);
+
+        }
     }
 
     private createCylinderWalls() {
-        this.cylinder_aggregate0 = this.createPhysics("Cylinder_primitive0");
+        this.cylinder_aggregate0 = this.createPhysicsCylinder("Cylinder_primitive0");
         this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
-        this.cylinder_aggregate1 = this.createPhysics("Cylinder_primitive1");
+        this.cylinder_aggregate1 = this.createPhysicsCylinder("Cylinder_primitive1");
         this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
     }
 
@@ -52,6 +66,15 @@ export class CarnotCylinder {
     }
 
     private createPhysics(meshName: string): PhysicsAggregate {
+        const meshOriginal = this.scene.getMeshByName(meshName)  as Mesh;
+        meshOriginal.isVisible = false;
+        const mesh = meshOriginal.clone("clone");
+        mesh.isVisible = true;
+        const shape = new PhysicsShapeMesh(mesh, this.scene);
+        shape.material = { friction: 0.0, restitution: 1.0 };
+        return new PhysicsAggregate(mesh, shape, { mass: 0 }, this.scene);
+    }
+    private createPhysicsCylinder(meshName: string): PhysicsAggregate {
         const mesh = this.scene.getMeshByName(meshName) as Mesh;
         const shape = new PhysicsShapeMesh(mesh, this.scene);
         shape.material = { friction: 0.0, restitution: 1.0 };
@@ -64,7 +87,7 @@ export class CarnotCylinder {
 
     public updatePistonMove(sourceType: number, sourceTypeIndex: number, gasTemperature1to180: number) {
         //piston move:
-        if (this.pistonIsWorking) {
+        if (this.pistonIsWorking && this.piston.body) {
             const pistonY = this.piston.body.transformNode.position.y;
             if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
@@ -212,25 +235,15 @@ export class CarnotCylinder {
         })
     }
     public resetPiston() {
-        this.piston.body.disablePreStep = false
-        this.piston.body.setAngularVelocity(Vector3.Zero());
-        this.piston.body.setLinearVelocity(Vector3.Zero());
-        this.piston.body.setMotionType(PhysicsMotionType.ANIMATED);        
-        this.piston.body.setMassProperties({ mass: 0 });
-        this.piston.body.transformNode.position = new Vector3(0, 2, 0);
-        this.piston.body.transformNode.rotation = new Vector3(0, Math.PI, Math.PI);
-        this.piston.body.setAngularVelocity(Vector3.Zero());
-        this.piston.body.setLinearVelocity(Vector3.Zero());
+
+        this.piston.body.transformNode.getChildMeshes().forEach(mesh => {mesh.dispose()});
+        this.piston.body.transformNode.dispose();
+        this.piston.shape.dispose();
+        this.piston.dispose();
+        this.piston = this.createPiston();
         
     }
     public activePiston(){
-        this.scene.onBeforeRenderObservable.addOnce(() => {
-            this.piston.body.disablePreStep = true;
-            this.piston.body.transformNode.rotation = new Vector3(0, Math.PI, Math.PI);
-            this.piston.body.setMotionType(PhysicsMotionType.DYNAMIC);
-            this.piston.body.setAngularVelocity(Vector3.Zero());
-            this.piston.body.setLinearVelocity(Vector3.Zero());
-            
-        })
+
     }
 }

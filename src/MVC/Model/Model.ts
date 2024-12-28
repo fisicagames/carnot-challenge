@@ -70,9 +70,11 @@ export class Model implements IModel {
             const sourceType = this.sourceBlocks.getSourceType();
             const sourceTypeIndex = this.sourceBlocks.getSourceTypeIndex();
             const gasTemperature1to180 = this.gasParticles.getGasCurrentTemperature();
-            this.carnotCylinder.updatePistonMove(sourceType, sourceTypeIndex, gasTemperature1to180);
-            const pistonY = this.carnotCylinder.getPistonY();
-            this.gasParticles.updateGasParticleState(pistonY);
+            if (this.carnotCylinder.piston) {
+                this.carnotCylinder.updatePistonMove(sourceType, sourceTypeIndex, gasTemperature1to180);
+                const pistonY = this.carnotCylinder.getPistonY();
+                this.gasParticles.updateGasParticleState(pistonY);
+            }
         });
     }
 
@@ -106,14 +108,14 @@ export class Model implements IModel {
         }
         return this.sourceBlocks.getSourceType();
     }
-    public resetGame(){
+    public resetGame() {
         this.carnotCylinder.pistonIsWorking = true;
         this.sourceBlocks.resetSource();
         this.carnotCylinder.resetCylinder();
         this.carnotCylinder.resetPiston();
         this.gasParticles.resetGasParticles(this.carnotCylinder.getPistonY());
     }
-    public activePiston(): void{
+    public activePiston(): void {
         this.carnotCylinder.activePiston();
         console.log("Active Piston");
     }
