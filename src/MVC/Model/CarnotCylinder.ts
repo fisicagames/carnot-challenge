@@ -100,7 +100,8 @@ export class CarnotCylinder {
             const pistonY = this.piston.body.transformNode.position.y;
             if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                this.processName = "Volume mínimo.";
+                this.processName = "Volume mínimo! \n Pistão emperrado!\n Fim de jogo!";
+                this.pistonIsWorking = false;
                 if (sourceType == 2 && gasTemperature1to180 < 2) {
                     this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
                     const boxMaterial = this.scene.getMaterialByName("Material.001") as StandardMaterial;
@@ -165,7 +166,8 @@ export class CarnotCylinder {
             else if (sourceType === 1 && sourceTypeIndex == 2) {
                 if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
-                    this.processName = "Volume mínimo.";
+                    this.processName = "Volume mínimo! \n Pistão emperrado!\n Fim de jogo!";
+                    this.pistonIsWorking = false;                    
                 }
                 else if (gasTemperature1to180 < 179) {
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityAdiabatic, 0));
