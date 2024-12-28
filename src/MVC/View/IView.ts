@@ -29,5 +29,5 @@ export interface IView {
 
     showEndGamePanel(isVisible: boolean): void;
 
-    changeButtonUPSymbol(string: string): void;
+    changeButtonUPSymbol(string: string, coins: number): void;
 }

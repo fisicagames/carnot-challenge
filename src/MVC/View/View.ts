@@ -215,19 +215,19 @@ export class View implements IView {
             this.textblockCenterPhrase.isVisible = isVisible;
         }
     }
-    public changeButtonUPSymbol(string: string) {
+    public changeButtonUPSymbol(string: string, coins: number) {
         if (!this.buttonUp.textBlock) {
             console.warn(`[WARNING]: buttonUp.textBlock is null or undefined.`);
             return; 
         }
         if(string == "0"){
-            this.buttonUp.textBlock.text = "Fonte Quente";
+            this.buttonUp.textBlock.text = `Fonte Quente (${coins})`;
         }
         else if(string == "1"){
-            this.buttonUp.textBlock.text = "Isolante";
+            this.buttonUp.textBlock.text = `Isolante (${coins})`;
         }
         else {
-            this.buttonUp.textBlock.text = "Fonte Fria";
+            this.buttonUp.textBlock.text = `Fonte Fria (${coins})`;
         }
         
     }

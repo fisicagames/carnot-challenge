@@ -12,6 +12,7 @@ export class Controller {
     private followCameraTarget: Mesh | null = null;
     private inputKeyboardControllers: InputKeyboardController;
     private score: number = 0;
+    private coins: number = 9;
 
 
     private isUpPressed: boolean = false;
@@ -23,7 +24,7 @@ export class Controller {
         this.scene = scene;
         this.model = model;
         this.view = view;
-        
+
         this.followCamera = this.scene.activeCamera as FollowCamera;
 
         this.model.setScoreUpdateCallback((newScore: number, state: string) => {
@@ -37,12 +38,12 @@ export class Controller {
         this.inputKeyboardControllerSetup();
         this.inputTouchControllerSetup();
 
-        
+
         this.update();
 
-    }  
-    
-    private inputKeyboardControllerSetup(){
+    }
+
+    private inputKeyboardControllerSetup() {
         this.inputKeyboardControllers.bindKeyboardEvents({
             "w": (eventType) => { this.handleKeyPress(eventType, "w"); },
             "arrowup": (eventType) => { this.handleKeyPress(eventType, "arrowup"); },
@@ -63,7 +64,7 @@ export class Controller {
 
     private update() {
         this.scene.onBeforeRenderObservable.add(() => {
-            this.updateCameraPosition();            
+            this.updateCameraPosition();
         });
     }
     private inputTouchControllerSetup() {
@@ -75,9 +76,12 @@ export class Controller {
         this.view.onButtonMenu(() => this.showMenu());
         this.view.onToggleMusic(() => this.toggleMusic());
         this.view.onButtonLang(() => this.changeLanguage());
-        this.view.buttonUpDown(() => { 
-            const sourceType = Number(this.model.changeSourceTypes()).toString();
-            this.view.changeButtonUPSymbol(sourceType);
+        this.view.buttonUpDown(() => {
+            if (this.coins >= 1) {
+                --this.coins;
+                const sourceType = Number(this.model.changeSourceTypes()).toString();
+                this.view.changeButtonUPSymbol(sourceType, this.coins);
+            }
         });
         //this.view.onButtonUpUp(() => { });
         this.view.setButtonUpUpCallback(() => null);
@@ -101,17 +105,16 @@ export class Controller {
 
     private startGame(): void {
         //TODO: Mudar para view:
-        this.view.changeButtonUPSymbol("1");
+        this.view.changeButtonUPSymbol("1", this.coins);
         this.continueGame();
     }
     private startGameLinear(): void {
-        this.view.changeButtonUPSymbol(`⇅`);
         this.continueGame();
     }
-    private continueGame(){
-        this.view.updateMainMenuVisibility(false);        
+    private continueGame() {
+        this.view.updateMainMenuVisibility(false);
         this.view.showEndGamePanel(false);
-        this.view.updateScoreText(0, "");        
+        this.view.updateScoreText(0, "");
     }
 
     private showMenu(): void {
