@@ -24,7 +24,6 @@ export class LanguageSwitcher {
             TextblockAviso:  ["🌟 Pontuações e Níveis 🏆\n\n<499: Iniciante 🐣\n\n500 - 539: Estudante Curioso 🧐\n540 - 579: Estudante Aplicado 📘\n580 - 619: Universitário Iniciante ✏️\n620 - 659: Universitário Dedicado 📚\n660 - 699: Professor de Física 🧑‍🏫\n700 - 709: Professor de Termodinâmica 🔥\n710 - 719: Gênio da Física 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️","🌟 Scores and Levels 🏆\n\n<499: Beginner 🐣\n\n500 - 539: Curious Student 🧐\n540 - 579: Dedicated Student 📘\n580 - 619: Novice University Student ✏️\n620 - 659: Advanced University Student 📚\n660 - 699: Physics Professor 🧑‍🏫\n700 - 709: Thermodynamics Professor 🔥\n710 - 719: Physics Genius 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️"],
             ButtonEfeitoSuave: ["Efeito Suave","Soft Effect"],
             ButtonEfeitoIntenso: ["Efeito Intenso","Intense Effect"],
-            TextblockMenuLevel: ["<499: Iniciante 🐣","<499: Beginner 🐣"],
             TextblockGraph: ["Diagrama PxV", "PxV Diagram"],
             ButtonMenuPlay: ["Jogar", "Play"]
         };

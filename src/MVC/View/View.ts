@@ -203,46 +203,47 @@ export class View implements IView {
         if (this.topScore < newScore) {
             this.topScore = newScore;
             if (this.topScore > 3) {
-                this.textblockMenuBest.text = this.getScoreDisplay(newScore);
+                this.getBestScoreDisplay(newScore);
             }
         }
     }
-
     private getScoreDisplay(score: number): string {
-        let scoreText: string;
-        
         if (score < 500) {
-            scoreText = `${score.toFixed(0)} J`;
+            return `${score.toFixed(0)} J`;
+        } else if (score < 600) {
+            return `${score.toFixed(0)} J 🥉`;
+        } else if (score < 700) {
+            return `${score.toFixed(0)} J 🥈`;
+        } else {
+            return `${score.toFixed(0)} J 🥇`;
+        }
+    }
+
+
+    private getBestScoreDisplay(score: number) {
+        let scoreText: string;
+
+        if (score < 500) {
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Iniciante 🐣" : "Beginner 🐣";
         } else if (score < 540) {
-            scoreText = `${score.toFixed(0)} J 🥉`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Estudante Curioso 🧐" : "Curious Student 🧐";
         } else if (score < 580) {
-            scoreText = `${score.toFixed(0)} J 🥈`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Estudante Aplicado 📘" : "Dedicated Student 📘";
         } else if (score < 620) {
-            scoreText = `${score.toFixed(0)} J 🥈`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Universitário Iniciante ✏️" : "Novice University Student ✏️";
         } else if (score < 660) {
-            scoreText = `${score.toFixed(0)} J 🥈`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Universitário Dedicado 📚" : "Advanced University Student 📚";
         } else if (score < 700) {
-            scoreText = `${score.toFixed(0)} J 🥇`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Professor de Física 🧑‍🏫" : "Physics Professor 🧑‍🏫";
         } else if (score < 710) {
-            scoreText = `${score.toFixed(0)} J 🥇`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Professor de Termodinâmica 🔥" : "Thermodynamics Professor 🔥";
         } else if (score < 720) {
-            scoreText = `${score.toFixed(0)} J 🥇`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Gênio da Física 🧠" : "Physics Genius 🧠";
         } else {
-            scoreText = `${score.toFixed(0)} J 🥇`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Nicolas Léonard Sadi Carnot ⚙️" : "Nicolas Léonard Sadi Carnot ⚙️";
         }
-    
-        return scoreText;
     }
-    
+
 
     public showEndGamePanel(isVisible: boolean): void {
         this.rectangleGame.isVisible = isVisible;
@@ -259,9 +260,9 @@ export class View implements IView {
             console.warn(`[WARNING]: buttonUp.textBlock is null or undefined.`);
             return;
         }
-    
+
         let translatedText: string;
-    
+
         if (string == "0") {
             translatedText = translate("Fonte Quente", this.languageSwitcher.languageOption);
         }
