@@ -209,16 +209,40 @@ export class View implements IView {
     }
 
     private getScoreDisplay(score: number): string {
+        let scoreText: string;
+        
         if (score < 500) {
-            return `${score.toFixed(0)} J`;
-        } else if (score < 600) {
-            return `${score.toFixed(0)} J 🥉 \n Nível: `;
+            scoreText = `${score.toFixed(0)} J`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Iniciante 🐣" : "Beginner 🐣";
+        } else if (score < 540) {
+            scoreText = `${score.toFixed(0)} J 🥉`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Estudante Curioso 🧐" : "Curious Student 🧐";
+        } else if (score < 580) {
+            scoreText = `${score.toFixed(0)} J 🥈`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Estudante Aplicado 📘" : "Dedicated Student 📘";
+        } else if (score < 620) {
+            scoreText = `${score.toFixed(0)} J 🥇`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Universitário Iniciante ✏️" : "Novice University Student ✏️";
+        } else if (score < 660) {
+            scoreText = `${score.toFixed(0)} J 🥇`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Universitário Dedicado 📚" : "Advanced University Student 📚";
         } else if (score < 700) {
-            return `${score.toFixed(0)} J 🥈 \n Nível: `;
+            scoreText = `${score.toFixed(0)} J 🥇`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Professor de Física 🧑‍🏫" : "Physics Professor 🧑‍🏫";
+        } else if (score < 710) {
+            scoreText = `${score.toFixed(0)} J 🥇`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Professor de Termodinâmica 🔥" : "Thermodynamics Professor 🔥";
+        } else if (score < 720) {
+            scoreText = `${score.toFixed(0)} J 🥇`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Gênio da Física 🧠" : "Physics Genius 🧠";
         } else {
-            return `${score.toFixed(0)} J 🥇 \n Nível: `;
+            scoreText = `${score.toFixed(0)} J 🥇`;
+            this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Nicolas Léonard Sadi Carnot ⚙️" : "Nicolas Léonard Sadi Carnot ⚙️";
         }
+    
+        return scoreText;
     }
+    
 
     public showEndGamePanel(isVisible: boolean): void {
         this.rectangleGame.isVisible = isVisible;
