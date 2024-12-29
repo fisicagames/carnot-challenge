@@ -17,6 +17,7 @@ export class Model implements IModel {
     private carnotCylinder: CarnotCylinder;
     private gasParticles: GasParticles;
     private sourceBlocks: SourceBlocks;
+    public updateModels: boolean = false;
 
     constructor(scene: Scene, physicsPlugin?: HavokPlugin | null) {
         this.scene = scene;
@@ -71,9 +72,11 @@ export class Model implements IModel {
             const sourceTypeIndex = this.sourceBlocks.getSourceTypeIndex();
             const gasTemperature1to180 = this.gasParticles.getGasCurrentTemperature();
             if (this.carnotCylinder.piston) {
-                this.carnotCylinder.updatePistonMove(sourceType, sourceTypeIndex, gasTemperature1to180);
                 const pistonY = this.carnotCylinder.getPistonY();
                 this.gasParticles.updateGasParticleState(pistonY);
+                if (this.updateModels) {
+                    this.carnotCylinder.updatePistonMove(sourceType, sourceTypeIndex, gasTemperature1to180);
+                }
             }
         });
     }
@@ -109,13 +112,11 @@ export class Model implements IModel {
         return this.sourceBlocks.getSourceType();
     }
     public resetGame() {
+        this.updateModels = false;
         this.carnotCylinder.pistonIsWorking = true;
         this.sourceBlocks.resetSource();
         this.carnotCylinder.resetCylinder();
         this.carnotCylinder.resetPiston();
         this.gasParticles.resetGasParticles(this.carnotCylinder.getPistonY());
-    }
-    public activePiston(): void {
-        this.carnotCylinder.activePiston();
     }
 }

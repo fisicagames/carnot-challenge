@@ -85,6 +85,7 @@ export class Controller {
                 this.view.changeButtonUPSymbol(sourceType, this.coins);
                 if(this.coins == 8){
                     this.score = 0;
+                    this.model.updateModels = true;
                 }
             }
         });

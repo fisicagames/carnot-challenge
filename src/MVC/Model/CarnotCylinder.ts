@@ -11,7 +11,7 @@ export class CarnotCylinder {
     private pistonYPosition: number = 3;
     public pistonIsWorking: boolean = true;
     private static readonly VOLUME_MAX: number = 16;
-    private static readonly VOLUME_MIN: number = 2;
+    private static readonly VOLUME_MIN: number = 0;
     private onCylinderFrozenCallback!: (() => void);
     private frameCount: number = 0;
     private realTimeGraph: RealTimeGraph;
@@ -22,7 +22,7 @@ export class CarnotCylinder {
     private onPistonExplosionCallback!: (() => void);
     private boxInitialColor: Color3;
     private originalMeshPositions: Vector3[] = [];
-    private originalMeshRotations: Nullable<Quaternion>[]= [];
+    private originalMeshRotations: Nullable<Quaternion>[] = [];
 
     public setPistonExplosionCallback(callback: () => void) {
         this.onPistonExplosionCallback = callback;
@@ -40,7 +40,7 @@ export class CarnotCylinder {
         const pistonMesh = this.scene.getMeshByName("Cylinder.001");
         const cylinder01Mesh0 = this.scene.getMeshByName("Cylinder_primitive0");
         const cylinder01Mesh1 = this.scene.getMeshByName("Cylinder_primitive1");
-        if (pistonMesh&& cylinder01Mesh0 && cylinder01Mesh1){
+        if (pistonMesh && cylinder01Mesh0 && cylinder01Mesh1) {
             this.originalMeshPositions.push(pistonMesh.position);
             this.originalMeshPositions.push(cylinder01Mesh0.position);
             this.originalMeshPositions.push(cylinder01Mesh1.position);
@@ -52,7 +52,7 @@ export class CarnotCylinder {
     }
 
     private createCylinderWalls() {
-        const cylinder_aggregate0_Mesh = this.scene.getMeshByName("Cylinder_primitive0")  as Mesh;
+        const cylinder_aggregate0_Mesh = this.scene.getMeshByName("Cylinder_primitive0") as Mesh;
         cylinder_aggregate0_Mesh.isVisible = false;
         const mesh0 = cylinder_aggregate0_Mesh.clone("clone0");
         mesh0.isVisible = true;
@@ -60,8 +60,8 @@ export class CarnotCylinder {
         shape.material = { friction: 0.0, restitution: 1.0 };
         this.cylinder_aggregate0 = new PhysicsAggregate(mesh0, shape, { mass: 0 }, this.scene);
         this.cylinder_aggregate0.body.setMotionType(PhysicsMotionType.STATIC);
-        
-        const cylinder_aggregate1_Mesh = this.scene.getMeshByName("Cylinder_primitive1")  as Mesh;
+
+        const cylinder_aggregate1_Mesh = this.scene.getMeshByName("Cylinder_primitive1") as Mesh;
 
         cylinder_aggregate1_Mesh.isVisible = false;
         const mesh1 = cylinder_aggregate1_Mesh.clone("clone1");
@@ -81,7 +81,7 @@ export class CarnotCylinder {
     }
 
     private createPhysics(meshName: string): PhysicsAggregate {
-        const meshOriginal = this.scene.getMeshByName(meshName)  as Mesh;
+        const meshOriginal = this.scene.getMeshByName(meshName) as Mesh;
         meshOriginal.isVisible = false;
         const mesh = meshOriginal.clone("clone");
         mesh.isVisible = true;
@@ -101,6 +101,7 @@ export class CarnotCylinder {
             if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                 this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                 this.processName = "Volume mínimo! \n Pistão emperrado!\n Fim de jogo!";
+                this.piston.body.setMotionType(PhysicsMotionType.STATIC);
                 this.pistonIsWorking = false;
                 if (sourceType == 2 && gasTemperature1to180 < 2) {
                     this.cylinder_aggregate1.body.setMotionType(PhysicsMotionType.STATIC);
@@ -167,7 +168,8 @@ export class CarnotCylinder {
                 if (pistonY <= CarnotCylinder.VOLUME_MIN) {
                     this.piston.body.setLinearVelocity(new Vector3(0, 0, 0));
                     this.processName = "Volume mínimo! \n Pistão emperrado!\n Fim de jogo!";
-                    this.pistonIsWorking = false;                    
+                    this.pistonIsWorking = false;
+                    this.piston.body.setMotionType(PhysicsMotionType.STATIC);
                 }
                 else if (gasTemperature1to180 < 179) {
                     this.piston.body.setLinearVelocity(new Vector3(0, -this.pistonYVelocityAdiabatic, 0));
@@ -186,6 +188,11 @@ export class CarnotCylinder {
                 }
                 else {
                     this.processName = "Compressão não Adiabática.";
+                    if (pistonY <= CarnotCylinder.VOLUME_MIN) {
+                        this.processName = "Volume mínimo! \n Pistão emperrado!\n Fim de jogo!";
+                        this.pistonIsWorking = false;
+                        this.piston.body.setMotionType(PhysicsMotionType.STATIC);
+                    }
                 }
             }
             this.frameCount++;
@@ -219,12 +226,12 @@ export class CarnotCylinder {
         boxMaterial.emissiveColor = this.boxInitialColor;
         this.realTimeGraph.resetData();
 
-        this.cylinder_aggregate0.body.transformNode.getChildMeshes().forEach(mesh => {mesh.dispose()});
+        this.cylinder_aggregate0.body.transformNode.getChildMeshes().forEach(mesh => { mesh.dispose() });
         this.cylinder_aggregate0.body.transformNode.dispose();
         this.cylinder_aggregate0.shape.dispose();
         this.cylinder_aggregate0.dispose();
 
-        this.cylinder_aggregate1.body.transformNode.getChildMeshes().forEach(mesh => {mesh.dispose()});
+        this.cylinder_aggregate1.body.transformNode.getChildMeshes().forEach(mesh => { mesh.dispose() });
         this.cylinder_aggregate1.body.transformNode.dispose();
         this.cylinder_aggregate1.shape.dispose();
         this.cylinder_aggregate1.dispose();
@@ -233,14 +240,11 @@ export class CarnotCylinder {
     }
     public resetPiston() {
 
-        this.piston.body.transformNode.getChildMeshes().forEach(mesh => {mesh.dispose()});
+        this.piston.body.transformNode.getChildMeshes().forEach(mesh => { mesh.dispose() });
         this.piston.body.transformNode.dispose();
         this.piston.shape.dispose();
         this.piston.dispose();
         this.piston = this.createPiston();
-        
-    }
-    public activePiston(){
 
     }
 }
