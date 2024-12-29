@@ -235,15 +235,18 @@ export class View implements IView {
             console.warn(`[WARNING]: buttonUp.textBlock is null or undefined.`);
             return;
         }
+    
+        let translatedText: string;
+    
         if (string == "0") {
-            this.buttonUp.textBlock.text = `Fonte Quente (${coins})`;
+            translatedText = translate("Fonte Quente", this.languageSwitcher.languageOption);
         }
         else if (string == "1") {
-            this.buttonUp.textBlock.text = `Isolante (${coins})`;
+            translatedText = translate("Isolante", this.languageSwitcher.languageOption);
         }
         else {
-            this.buttonUp.textBlock.text = `Fonte Fria (${coins})`;
+            translatedText = translate("Fonte Fria", this.languageSwitcher.languageOption);
         }
-
+        this.buttonUp.textBlock.text = `${translatedText} (${coins})`;
     }
 }

@@ -59,6 +59,18 @@ export function translate(key: string, languageOption: number): string {
         "Fim de jogo!": [
             "Fim de jogo!", // PT
             "Game Over!" // EN
+        ],
+        "Fonte Quente": [
+            "Fonte Quente", // PT
+            "Hot Reservoir" // EN
+        ],
+        "Isolante": [
+            "Isolante Térmico", // PT
+            "Insulating Stand" // EN
+        ],
+        "Fonte Fria": [
+            "Fonte Fria", // PT
+            "Cold Reservoir" // EN
         ]
     };
     if (!translations[key]) {
