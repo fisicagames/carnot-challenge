@@ -221,10 +221,10 @@ export class View implements IView {
             scoreText = `${score.toFixed(0)} J 🥈`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Estudante Aplicado 📘" : "Dedicated Student 📘";
         } else if (score < 620) {
-            scoreText = `${score.toFixed(0)} J 🥇`;
+            scoreText = `${score.toFixed(0)} J 🥈`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Universitário Iniciante ✏️" : "Novice University Student ✏️";
         } else if (score < 660) {
-            scoreText = `${score.toFixed(0)} J 🥇`;
+            scoreText = `${score.toFixed(0)} J 🥈`;
             this.textblockMenuLevel.text = this.languageSwitcher.languageOption === 0 ? "Universitário Dedicado 📚" : "Advanced University Student 📚";
         } else if (score < 700) {
             scoreText = `${score.toFixed(0)} J 🥇`;
