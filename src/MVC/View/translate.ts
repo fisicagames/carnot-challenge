@@ -65,7 +65,7 @@ export function translate(key: string, languageOption: number): string {
             "Hot Reservoir" // EN
         ],
         "Isolante": [
-            "Isolante Térmico", // PT
+            "Isolante", // PT
             "Insulating Stand" // EN
         ],
         "Fonte Fria": [
