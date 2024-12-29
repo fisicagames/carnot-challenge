@@ -192,18 +192,18 @@ export class View implements IView {
         if (this.languageSwitcher.languageOption == 0) {
             this.textblockLevel.text = `${state}\n Trabalho: ${work.toFixed(1).replace('.', ',')} J \n Trabalho total: ${newScore.toFixed(0)} J`;
             //TODO: Remove next line for run only when endGame event. Send to show end game?
-            this.textblockMenuBest.text = this.getScoreDisplay(newScore);
+            this.textblockMenuBest.text = this.getScoreDisplay(this.topScore);
         }
         else {
             this.textblockLevel.text = `${state}\n Work: ${work.toFixed(1)} J \n Total Work: ${newScore.toFixed(0)} J`;
             //TODO: Remove next line for run only when endGame event. Send to show end game?
-            this.textblockMenuBest.text = this.getScoreDisplay(newScore);
+            this.textblockMenuBest.text = this.getScoreDisplay(this.topScore);
 
         }
         if (this.topScore < newScore) {
             this.topScore = newScore;
             if (this.topScore > 3) {
-                this.getBestScoreDisplay(this.topScore);
+                this.getBestScoreDisplay(newScore);
             }
         }
     }
