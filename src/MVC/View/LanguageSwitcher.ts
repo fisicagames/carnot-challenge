@@ -21,7 +21,7 @@ export class LanguageSwitcher {
             ButtonMenuContinuar: ["Reiniciar","Restart"],
             TextblockScoreGame: ["Tensão:  0 Volts","Voltage: 0 Volts"],
             TextblockMusic: ["Música:","Music:"],
-            TextblockAviso:  ["Aviso: este jogo contém efeitos visuais rápidos, incluindo luzes piscando e mudanças bruscas de iluminação, que podem não ser adequados para pessoas com epilepsia fotossensível ou outras condições relacionadas à luz. Escolha a configuração que melhor se adapta a você:","Warning: This game contains fast visual effects, including flashing lights and sudden changes in illumination, which may not be suitable for individuals with photosensitive epilepsy or other light-related conditions. Please choose the setting that works best for you:"],
+            TextblockAviso:  ["🌟 Pontuações e Níveis 🏆\n\n499-: Iniciante 🐣\n\n500 - 539: Estudante Curioso 🧐\n540 - 579: Estudante Aplicado 📘\n580 - 619: Universitário Iniciante ✏️\n620 - 659: Universitário Dedicado 📚\n660 - 699: Professor de Física 🧑‍🏫\n700 - 709: Professor de Termodinâmica 🔥\n710 - 719: Gênio da Física 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️","🌟 Scores and Levels 🏆\n\n499-: Beginner 🐣\n\n500 - 539: Curious Student 🧐\n540 - 579: Dedicated Student 📘\n580 - 619: Novice University Student ✏️\n620 - 659: Advanced University Student 📚\n660 - 699: Physics Professor 🧑‍🏫\n700 - 709: Thermodynamics Professor 🔥\n710 - 719: Physics Genius 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️"],
             ButtonEfeitoSuave: ["Efeito Suave","Soft Effect"],
             ButtonEfeitoIntenso: ["Efeito Intenso","Intense Effect"],
 

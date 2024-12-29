@@ -28,9 +28,9 @@ export class Controller {
         this.followCamera = this.scene.activeCamera as FollowCamera;
 
         this.model.setScoreUpdateCallback((newScore: number, state: string) => {
-            if(Math.abs(newScore) < 50){
-                this.score += newScore;            
-            }                        
+            if (Math.abs(newScore) < 50) {
+                this.score += newScore;
+            }
             this.view.updateScoreText(this.score, state)
         });
 
@@ -83,7 +83,7 @@ export class Controller {
                 --this.coins;
                 const sourceType = Number(this.model.changeSourceTypes()).toString();
                 this.view.changeButtonUPSymbol(sourceType, this.coins);
-                if(this.coins == 8){
+                if (this.coins == 8) {
                     this.score = 0;
                     this.model.updateModels = true;
                 }

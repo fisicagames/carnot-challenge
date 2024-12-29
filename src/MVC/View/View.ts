@@ -38,6 +38,7 @@ export class View implements IView {
     private textblockAviso!: TextBlock;
     private buttonEfeitoSuave!: Button;
     private buttonEfeitoIntenso!: Button;
+    private buttonMenuPlay!: Button;
     private firstTime: boolean = true;
 
     constructor(scene: Scene, advancedTexture: AdvancedDynamicTexture) {
@@ -89,6 +90,11 @@ export class View implements IView {
         this.buttonEfeitoSuave = this.advancedTexture.getControlByName("ButtonEfeitoSuave") as Button;
         this.buttonEfeitoIntenso = this.advancedTexture.getControlByName("ButtonEfeitoIntenso") as Button;
         this.rectangleAviso.isVisible = false;
+        this.buttonMenuPlay = this.advancedTexture.getControlByName("ButtonMenuPlay") as Button;
+
+        this.buttonMenuPlay.onPointerUpObservable.add(() => {
+            this.rectangleAviso.isVisible = false;
+        });
     }
 
     public updateMainMenuVisibility(isVisible: boolean) {
@@ -115,6 +121,7 @@ export class View implements IView {
 
     public onButtonMenuStartA(callback: () => void): void {
         this.buttonMenuStartA.onPointerUpObservable.add(() => {
+            this.rectangleAviso.isVisible = true;
             callback();
         });
     }
@@ -177,7 +184,7 @@ export class View implements IView {
 
     public updateScoreText(newScore: number, state: string): void {
         if (this.languageSwitcher.languageOption == 0) {
-            this.textblockLevel.text = `${state} \n Trabalho total: ${newScore.toFixed(0)} J` ;
+            this.textblockLevel.text = `${state} \n Trabalho total: ${newScore.toFixed(0)} J`;
             //TODO: Remove next two lines for run only when endGame event. Send to show end game?
             this.textblockTotalScore.text = this.getScoreDisplay(newScore);
         }
@@ -189,7 +196,7 @@ export class View implements IView {
         }
         if (this.topScore < newScore) {
             this.topScore = newScore;
-            if(this.topScore > 3){
+            if (this.topScore > 3) {
                 this.textblockMenuBest.text = this.getScoreDisplay(newScore);
             }
         }
@@ -199,11 +206,11 @@ export class View implements IView {
         if (score < 500) {
             return `${score.toFixed(0)} J`;
         } else if (score < 600) {
-            return `${score.toFixed(0)} J 🥉`;
+            return `${score.toFixed(0)} J 🥉 \n Nível: `;
         } else if (score < 700) {
-            return `${score.toFixed(0)} J 🥈`;
+            return `${score.toFixed(0)} J 🥈 \n Nível: `;
         } else {
-            return `${score.toFixed(0)} J 🥇`;
+            return `${score.toFixed(0)} J 🥇 \n Nível: `;
         }
     }
 
@@ -220,17 +227,17 @@ export class View implements IView {
     public changeButtonUPSymbol(string: string, coins: number) {
         if (!this.buttonUp.textBlock) {
             console.warn(`[WARNING]: buttonUp.textBlock is null or undefined.`);
-            return; 
+            return;
         }
-        if(string == "0"){
+        if (string == "0") {
             this.buttonUp.textBlock.text = `Fonte Quente (${coins})`;
         }
-        else if(string == "1"){
+        else if (string == "1") {
             this.buttonUp.textBlock.text = `Isolante (${coins})`;
         }
         else {
             this.buttonUp.textBlock.text = `Fonte Fria (${coins})`;
         }
-        
+
     }
 }

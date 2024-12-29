@@ -6,6 +6,10 @@ export class LanguageDetector {
         if (!browserLanguage.startsWith("pt")) {
             changeLanguageCallback();
         }
+        else{
+            changeLanguageCallback();
+            changeLanguageCallback();
+        }
     }
 }
 
