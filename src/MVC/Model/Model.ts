@@ -92,7 +92,7 @@ export class Model implements IModel {
         this.endGameCallback = callback;
     }
 
-    public setScoreUpdateCallback(callback: (newScore: number, state: string) => void): void {
+    public setScoreUpdateCallback(callback: (newScore: number, state: string, work: number) => void): void {
         this.carnotCylinder.setUpdateScoreCallback(callback);
     }
 

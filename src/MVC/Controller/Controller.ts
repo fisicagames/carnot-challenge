@@ -27,11 +27,11 @@ export class Controller {
 
         this.followCamera = this.scene.activeCamera as FollowCamera;
 
-        this.model.setScoreUpdateCallback((newScore: number, state: string) => {
+        this.model.setScoreUpdateCallback((newScore: number, state: string, work: number) => {
             if (Math.abs(newScore) < 50) {
                 this.score += newScore;
             }
-            this.view.updateScoreText(this.score, state)
+            this.view.updateScoreText(this.score, state, work)
         });
 
         this.model.setEndGameCallback((isVisible: boolean) => this.showEndGamePanel(isVisible));
@@ -123,7 +123,7 @@ export class Controller {
     private continueGame() {
         this.view.updateMainMenuVisibility(false);
         this.view.showEndGamePanel(false);
-        this.view.updateScoreText(0, "");
+        this.view.updateScoreText(0, "", 0);
     }
 
     private showMenu(): void {

@@ -15,7 +15,7 @@ export class CarnotCylinder {
     private onCylinderFrozenCallback!: (() => void);
     private frameCount: number = 0;
     private realTimeGraph: RealTimeGraph;
-    public onUpdateScoreCallback?: ((score: number, state: string) => void);
+    public onUpdateScoreCallback?: ((score: number, state: string, work: number) => void);
     private lastVolume: number = 2;
     private processName: string = "";
     private pointsAdd: number = 0;
@@ -204,20 +204,20 @@ export class CarnotCylinder {
                 const work = pressure * deltaVolume;
                 this.lastVolume = pistonY;
                 if (this.onUpdateScoreCallback) {
-                    this.onUpdateScoreCallback(work, this.processName + `\n Trabalho: ${work.toFixed(1)} J`);
+                    this.onUpdateScoreCallback(work, this.processName, work);
                 }
             }
         }
         else {
             if (this.onUpdateScoreCallback) {
-                this.onUpdateScoreCallback(0, this.processName);
+                this.onUpdateScoreCallback(0, this.processName, 0);
             }
         }
     }
     public setCylinderFrozenCallback(callback: () => void) {
         this.onCylinderFrozenCallback = callback;
     }
-    public setUpdateScoreCallback(callback: (newScore: number, state: string) => void) {
+    public setUpdateScoreCallback(callback: (newScore: number, state: string, work: number) => void) {
         this.onUpdateScoreCallback = callback;
     }
 

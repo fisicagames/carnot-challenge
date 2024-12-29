@@ -14,17 +14,19 @@ export class LanguageSwitcher {
             ButtonMenuStartB: ["Movimento Linear", "Linear Motion"],
             ButtonMenuStartC: ["None", "None"],
             TextblockMenuScore: ["Maior pontuação:", "High Score:"],
-            TextblockSecond: ["ℰ: força eletromotriz induzida (volts).", "ℰ: electromotive force induced (volts)." ],
-            TextBlockThird: ["N: número de espiras da bobina.","N: number of coil turns."],
-            TextBlockQuarter: ["ΔΦ: variação do fluxo magnético (weber).","ΔΦ: variation in magnetic flux (weber)."],
-            TextBlockFiver:  ["Δt: intervalo de tempo (segundos).","Δt: time interval (seconds)."],
+            TextblockSecond: ["W: Trabalho realizado pelo gás (J).", "W: Work done by the gas (J)."],
+            TextBlockThird: ["∫: Símbolo de integração.", "∫: Integration symbol."],
+            TextBlockQuarter: ["P: Pressão do gás (Pa).", "P: Gas pressure (Pa)."],
+            TextBlockFiver: ["dV: Infinitesimal de volume (m³).", "dV: Infinitesimal volume (m³)."],            
             ButtonMenuContinuar: ["Reiniciar","Restart"],
             TextblockScoreGame: ["Tensão:  0 Volts","Voltage: 0 Volts"],
             TextblockMusic: ["Música:","Music:"],
-            TextblockAviso:  ["🌟 Pontuações e Níveis 🏆\n\n499-: Iniciante 🐣\n\n500 - 539: Estudante Curioso 🧐\n540 - 579: Estudante Aplicado 📘\n580 - 619: Universitário Iniciante ✏️\n620 - 659: Universitário Dedicado 📚\n660 - 699: Professor de Física 🧑‍🏫\n700 - 709: Professor de Termodinâmica 🔥\n710 - 719: Gênio da Física 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️","🌟 Scores and Levels 🏆\n\n499-: Beginner 🐣\n\n500 - 539: Curious Student 🧐\n540 - 579: Dedicated Student 📘\n580 - 619: Novice University Student ✏️\n620 - 659: Advanced University Student 📚\n660 - 699: Physics Professor 🧑‍🏫\n700 - 709: Thermodynamics Professor 🔥\n710 - 719: Physics Genius 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️"],
+            TextblockAviso:  ["🌟 Pontuações e Níveis 🏆\n\n<499: Iniciante 🐣\n\n500 - 539: Estudante Curioso 🧐\n540 - 579: Estudante Aplicado 📘\n580 - 619: Universitário Iniciante ✏️\n620 - 659: Universitário Dedicado 📚\n660 - 699: Professor de Física 🧑‍🏫\n700 - 709: Professor de Termodinâmica 🔥\n710 - 719: Gênio da Física 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️","🌟 Scores and Levels 🏆\n\n<499: Beginner 🐣\n\n500 - 539: Curious Student 🧐\n540 - 579: Dedicated Student 📘\n580 - 619: Novice University Student ✏️\n620 - 659: Advanced University Student 📚\n660 - 699: Physics Professor 🧑‍🏫\n700 - 709: Thermodynamics Professor 🔥\n710 - 719: Physics Genius 🧠\n\n720+: Nicolas Léonard Sadi Carnot ⚙️"],
             ButtonEfeitoSuave: ["Efeito Suave","Soft Effect"],
             ButtonEfeitoIntenso: ["Efeito Intenso","Intense Effect"],
-
+            TextblockMenuLevel: ["<499: Iniciante 🐣","<499: Beginner 🐣"],
+            TextblockGraph: ["Diagrama PxV", "PxV Diagram"],
+            ButtonMenuPlay: ["Jogar", "Play"]
         };
     }
 

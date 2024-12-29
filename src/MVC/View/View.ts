@@ -6,6 +6,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { EndGamePhrases } from "./EndGamePhrases";
 import { PhysicsConceptualPhrases } from "./PhysicsConceptualPhrases";
 import { LanguageDetector } from "./LanguageDetector";
+import { translate } from "./translate";
 
 export class View implements IView {
     private scene: Scene;
@@ -40,6 +41,8 @@ export class View implements IView {
     private buttonEfeitoIntenso!: Button;
     private buttonMenuPlay!: Button;
     private firstTime: boolean = true;
+    private textblockMenuLevel!: TextBlock;
+    private textblockGraph!: TextBlock;
 
     constructor(scene: Scene, advancedTexture: AdvancedDynamicTexture) {
         this.scene = scene;
@@ -91,6 +94,8 @@ export class View implements IView {
         this.buttonEfeitoIntenso = this.advancedTexture.getControlByName("ButtonEfeitoIntenso") as Button;
         this.rectangleAviso.isVisible = false;
         this.buttonMenuPlay = this.advancedTexture.getControlByName("ButtonMenuPlay") as Button;
+        this.textblockMenuLevel = this.advancedTexture.getControlByName("TextblockMenuLevel") as TextBlock;
+        this.textblockGraph = this.advancedTexture.getControlByName("TextblockGraph") as TextBlock;
 
         this.buttonMenuPlay.onPointerUpObservable.add(() => {
             this.rectangleAviso.isVisible = false;
@@ -182,16 +187,17 @@ export class View implements IView {
         this.buttonLeft.onPointerDownObservable.add(callback);
     }
 
-    public updateScoreText(newScore: number, state: string): void {
+    public updateScoreText(newScore: number, statePT: string, work: number): void {
+        const state = translate(statePT, this.languageSwitcher.languageOption);
         if (this.languageSwitcher.languageOption == 0) {
-            this.textblockLevel.text = `${state} \n Trabalho total: ${newScore.toFixed(0)} J`;
-            //TODO: Remove next two lines for run only when endGame event. Send to show end game?
+            this.textblockLevel.text = `${state}\n Trabalho: ${work.toFixed(1).replace('.', ',')} J \n Trabalho total: ${newScore.toFixed(0)} J`;
+            //TODO: Remove next line for run only when endGame event. Send to show end game?
             this.textblockTotalScore.text = this.getScoreDisplay(newScore);
         }
         else {
-            this.textblockLevel.text = newScore + ` Volts. \n Max. voltage: ` + this.getScoreDisplay(this.topScore);
-            //TODO: Remove next two lines for run only when endGame event. Send to show end game?
-            this.textblockTotalScore.text = `Voltage: ` + this.getScoreDisplay(newScore) + ` 🏆`;
+            this.textblockLevel.text = `${state}\n Work: ${work.toFixed(1)} J \n Total Work: ${newScore.toFixed(0)} J`;
+            //TODO: Remove next line for run only when endGame event. Send to show end game?
+            this.textblockTotalScore.text = this.getScoreDisplay(newScore);
 
         }
         if (this.topScore < newScore) {
