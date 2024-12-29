@@ -203,7 +203,7 @@ export class View implements IView {
         if (this.topScore < newScore) {
             this.topScore = newScore;
             if (this.topScore > 3) {
-                this.getBestScoreDisplay(newScore);
+                this.getBestScoreDisplay(this.topScore);
             }
         }
     }
