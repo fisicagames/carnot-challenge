@@ -1,3 +1,5 @@
+import { SoundModel } from "./SoundModel";
+
 export interface IModel {
     toggleMusicPlayback(): void;
     setScoreUpdateCallback(callback: (newScore: number, state: string, work: number) => void): void;
@@ -5,4 +7,5 @@ export interface IModel {
     changeSourceTypes(): void;  
     resetGame(): void;
     updateModels: boolean;
+    backgroundMusic: SoundModel | undefined;
 }

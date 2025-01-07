@@ -7,7 +7,7 @@ import { SourceBlocks } from "./SourceBlocks";
 import { GasParticles } from "./GasParticles";
 export class Model implements IModel {
     private scene: Scene;
-    private backgroundMusic?: SoundModel;
+    public backgroundMusic: SoundModel | undefined;
     private explosionSound?: SoundModel;
     private allSounds: SoundModel[] = [];
     private physicsPlugin: HavokPlugin | null;
@@ -51,7 +51,6 @@ export class Model implements IModel {
         );
         this.backgroundMusic.setVolume(1.0);
         this.allSounds.push(this.backgroundMusic);
-
 
         //https://pixabay.com/sound-effects/nuclear-explosion-63470/
         //Artistunfa (Freesound)
