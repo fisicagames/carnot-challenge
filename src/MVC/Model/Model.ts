@@ -1,4 +1,4 @@
-import { Scene, HavokPlugin, MeshBuilder, Vector3, Mesh, PhysicsAggregate, TransformNode, PhysicsShapeSphere, PhysicsShapeBox, Quaternion, StandardMaterial, Color3 } from "@babylonjs/core";
+import { Scene, HavokPlugin } from "@babylonjs/core";
 import { IModel } from "./IModel";
 import { SoundModel } from "./SoundModel";
 import { CarnotCylinder } from "./CarnotCylinder";
