@@ -1,5 +1,5 @@
 import { Sound, Scene } from "@babylonjs/core";
-import { ISoundInterface } from "../../Core/ISoundInterface";
+import { ISoundInterface } from "./ISoundInterface";
 
 export class SoundModel implements ISoundInterface {
     private _sound: Sound;
