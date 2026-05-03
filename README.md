@@ -5,7 +5,7 @@
 [![Babylon.js](https://img.shields.io/badge/Babylon.js-7.5.0-purple.svg)](https://www.babylonjs.com/)
 [![Vite](https://img.shields.io/badge/Vite-5.2.11-yellow.svg)](https://vitejs.dev/)
 
-An interactive simulation on the Carnot thermodynamic cycle, built on a custom MVC framework using Babylon.js with the Havok physics engine.
+An interactive simulation on the Carnot thermodynamic cycle — the simulation that consolidated the **callback-based Mediator pattern** as the architectural standard of the SHIFT series.
 
 ### [🎮 Play Now!](https://fisicagames.com.br/)
 
@@ -19,7 +19,6 @@ An interactive simulation on the Carnot thermodynamic cycle, built on a custom M
 * [Tech Stack](#-tech-stack)
 * [Installation and Setup](#-installation-and-setup)
 * [Architecture and Technical Highlights](#-architecture-and-technical-highlights)
-* [Screenshots](#-screenshots)
 * [License](#-license)
 * [Author](#-author)
 
@@ -27,9 +26,11 @@ An interactive simulation on the Carnot thermodynamic cycle, built on a custom M
 
 ## 📖 About the Game
 
-**Carnot Game** is an interactive simulation based on the Carnot Cycle, in which the player alternates between three thermal reservoirs (hot, insulating, and cold) to maximize the work performed on a piston inside a cylinder. The objective is to keep the piston operating in the ideal Carnot cycle, switching reservoirs precisely to avoid both cylinder explosion (overheating) and freezing. The closer the player stays to the ideal Carnot cycle, the higher the score.
+**Carnot Game** is the seventh and final simulation produced in 2024 (developed December 21–29). It adapts the **Carnot cycle** — a theoretical, idealized thermodynamic process — into an interactive game format. The player alternates between three thermal reservoirs (hot, insulating, and cold) by clicking a single button, attempting to keep the piston operating close to the ideal cycle and avoiding the cylinder exploding (overheating) or freezing.
 
-The player must time three thermodynamic transitions correctly: **isothermal expansion**, **adiabatic expansion**, **isothermal compression**, and **adiabatic compression**. The simulation is intentionally demonstrative rather than quantitative — the Carnot cycle is an idealized construct, and the game focuses on the correct sequence of processes rather than precise calculations of state variables.
+The simulation is intentionally demonstrative rather than quantitative — the Carnot cycle is an idealized construct, and the game focuses on the correct sequence of processes (isothermal expansion, adiabatic expansion, isothermal compression, adiabatic compression) rather than precise calculations of state variables.
+
+To make the experience more engaging for casual users, dramatic outcomes such as machine explosion or freezing represent the lúdic consequences of straying from the ideal cycle conditions.
 
 ---
 
@@ -39,7 +40,8 @@ The player must time three thermodynamic transitions correctly: **isothermal exp
 * **Carnot-Based Scoring:** The closer the player's cycle is to the ideal Carnot cycle, the more work is generated and the higher the score.
 * **Real-Time Visual Feedback:**
   * **Temperature:** Particles change color (red to blue) and velocity, reflecting temperature changes.
-  * **Pressure:** The piston vibrates as internal pressure changes, driven by real particle collisions inside the cylinder.
+  * **Pressure:** The piston moves dynamically as internal pressure changes, driven by real particle collisions inside the cylinder.
+* **Real-Time PV Diagram:** A graph displays the relation between volume (piston height) and temperature, updated dynamically as the cycle progresses.
 * **Score Levels and Titles:**
   * 499–: 🐣 Beginner
   * 500–539: 🧐 Curious Student
@@ -50,7 +52,7 @@ The player must time three thermodynamic transitions correctly: **isothermal exp
   * 700–709: 🔥 Thermodynamics Teacher
   * 710–719: 🧠 Physics Genius
   * 720+: ⚙️ Nicolas Léonard Sadi Carnot
-* **Limited Switches:** The player can perform up to 9 reservoir switches, with the last switch causing an explosion if it is the hot reservoir.
+* **Limited Switches:** The player can perform up to 9 reservoir switches; a final hot-reservoir switch causes an explosion.
 * **Multilingual:** Native support for Portuguese and English.
 
 ---
@@ -61,18 +63,14 @@ The player must time three thermodynamic transitions correctly: **isothermal exp
 
 #### Controls
 
-💻 **On PC:**
+💻 **On PC:** Spacebar or any key to switch between thermal reservoirs.
 
-* **[ Spacebar ]** : Switch between thermal reservoirs.
-
-📱 **On Mobile / Touch:**
-
-* **[ Tap ]** the on-screen button to switch reservoirs.
+📱 **On Mobile / Touch:** Tap the on-screen button to switch reservoirs.
 
 #### Challenges
 
-* **Reservoir Switching:** Up to 9 switches available; the last switch causes an explosion if it is the hot reservoir.
-* **Piston Jamming:** The piston can get stuck at maximum or minimum volume limits if switching is not timed correctly.
+* **Limited Switches:** Up to 9 reservoir switches; the last switch causes an explosion if it is the hot reservoir.
+* **Piston Jamming:** The piston can get stuck at the maximum or minimum volume limits if switches are mistimed.
 * **Score:** Points are awarded based on how closely the cycle approaches the ideal Carnot cycle.
 
 You can switch between **Portuguese** and **English** using the button in the top-right corner.
@@ -83,9 +81,9 @@ You can switch between **Portuguese** and **English** using the button in the to
 
 | Tool                                       | Version | Description                                                              |
 | ------------------------------------------ | ------- | ------------------------------------------------------------------------ |
-| [TypeScript](https://www.typescriptlang.org/) | 5.7.2   | Core language, providing type safety and robust architecture.            |
+| [TypeScript](https://www.typescriptlang.org/) | 5.7.2   | Core language, providing type safety and modular architecture.           |
 | [Babylon.js](https://www.babylonjs.com/)      | 7.5.0   | Graphics engine for 3D rendering, animations, particles, and GUI system. |
-| [Havok](https://www.havok.com/)               | latest  | Physics engine for realistic rigid-body interactions.                    |
+| [Havok](https://www.havok.com/)               | latest  | Physics engine used for rigid-body gas particles and piston interactions.|
 | [Vite.js](https://vitejs.dev/)                | 5.2.11  | Build tool for ES6 module compilation, tree-shaking, and optimization.   |
 | [Node.js](https://nodejs.org/en)              | 20+     | Development environment and runtime.                                     |
 
@@ -93,45 +91,56 @@ You can switch between **Portuguese** and **English** using the button in the to
 
 ## 🚀 Installation and Setup
 
-**Prerequisites:**
+**Prerequisites:** Node.js (v20+), npm (v10+).
 
-* Node.js (v20 or higher)
-* NPM (v10 or higher)
-
-**Steps:**
-
-1. Clone the repository.
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Start the development server:
-   ```sh
-   npm run dev
-   ```
-4. Build for production (generates the `dist` folder):
-   ```sh
-   npm run build
-   ```
+```sh
+npm install
+npm run dev      # development server
+npm run build    # production build (generates the dist folder)
+```
 
 ---
 
 ## 🏗 Architecture and Technical Highlights
 
-The project uses a **custom MVC Framework written in TypeScript**, allowing the simulation to run natively in mobile browsers without requiring full-screen APIs or third-party app installations.
+**Carnot Game** was a milestone for consolidating the **callback-based Mediator pattern** introduced in *Faraday Game*. All event flows from inner to outer classes are handled through chained callbacks across every intermediate class, providing linear traceability and dispensing with state machines or central event managers.
 
-Data flow is organized using the **Model-View-Controller (MVC)** pattern via callbacks:
+The simulation builds on the **adapted MVC architecture** (Core / Controller / Model / View) established in the previous SHIFT simulations.
 
-* **Model:** Combines the **Havok physics engine** with a manual thermodynamic model. The cylinder is populated with 100 particles that mimic gas behavior — their velocities are scaled with √T (where T is the current temperature reservoir), and pressure on the piston is computed from real-time particle collisions. A defensive velocity-clamping technique prevents particles from passing through cylinder walls between time steps.
-* **View:** Constructs the interface via Babylon GUI and manages reactive translations (Portuguese / English), updating the UI based on state changes. Particle color and animation respond to temperature changes in real time.
-* **Controller:** Processes input events and triggers reservoir transitions, propagating temperature changes to the particle system.
+#### Physics Modeling — Hybrid Approach
 
-The result is an interactive demonstration of thermodynamic cycles rather than a quantitative simulation — students experience the qualitative behavior of an idealized cycle without being burdened by exact state-variable calculations.
+The Carnot cycle is a theoretical and idealized process — quasi-static and reversible — that cannot be reproduced exactly. The simulation uses a **hybrid physics approach**:
+
+* **Gas particles as Havok rigid bodies:** 100 spherical particles inside the cylinder, configured with restitution = 1.0 for elastic collisions, simulating gas molecule behavior.
+* **Particle velocity scales with temperature:** Velocities follow `v ∝ √T`, inspired by the kinetic theory result `v_rms = √(3kT/m)`, simplified to a tunable factor for gameplay purposes.
+* **Color-coded temperature:** Particle hue varies from blue (cold) to red (hot) using HSV color space, providing immediate visual feedback.
+* **Piston motion governed by reservoir state:** The piston velocity is set explicitly per process (isothermal vs adiabatic), rather than computed from gas pressure dynamics — a deliberate simplification for accessibility.
+* **Work and pressure approximation:** Work is computed every 10 frames as `W = P · ΔV`, with pressure approximated as `P ∝ T / V`, a simplified version of the ideal gas law `PV = nRT`.
+* **Velocity clamping:** Particle velocities are bounded to prevent tunneling through cylinder walls between time steps.
+
+#### A Note on Code Complexity
+
+The piston control logic accumulated technical debt in the form of deeply nested conditional branches (cyclomatic complexity > 30). This was a known and accepted trade-off, as refactoring was deferred to prioritize the publication schedule of the simulations in January 2025.
+
+#### Architecture Highlights
+
+* **MVC adapted:** Core / Controller / Model / View folder organization.
+* **Mediator with callbacks:** Linear event flow between adjacent classes via chained callbacks.
+* **Real-time PV diagram:** Implemented as a `realTimeGraph` View component, updating each frame.
+* **Game-over conditions:** The simulation handles "exploded engine" and "frozen engine" states as part of the hypercasual gameplay loop.
+
+The result is a visually engaging, conceptually accurate animation of the Carnot cycle, accessible to casual users while still capturing the qualitative dynamics of thermodynamic processes.
 
 ---
+
 ## 📸 Screenshots
 
-![1736179748201](image/README/1736179748201.png) ![1736179767389](image/README/1736179767389.png) ![1736179798065](image/README/1736179798065.png) ![1736179831530](image/README/1736179831530.png)
+<p align="center">
+  <img src="image/README/1736179748201.png" width="22%" alt="Carnot Game screenshot 1" />
+  <img src="image/README/1736179767389.png" width="22%" alt="Carnot Game screenshot 2" />
+  <img src="image/README/1736179798065.png" width="22%" alt="Carnot Game screenshot 3" />
+  <img src="image/README/1736179831530.png" width="22%" alt="Carnot Game screenshot 4" />
+</p>
 
 ---
 
